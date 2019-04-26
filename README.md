@@ -1,1 +1,1 @@
-A web chat app. Creating using react, node.js and sockets.io. Project in progress.
+A web chat app. Creating using react, node.js and socket.io. Project in progress.
