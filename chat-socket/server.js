@@ -1,25 +1,30 @@
-const express = require("express");
-const http = require("http");
-const socketIO = require("socket.io");
+var express = require("express");
+var socket = require("socket.io");
 
-const port = 5000;
-
-const app = express();
-
-//server instance
-const server = http.createServer(app);
-
-//creating socket using the instance of the server
-const io = socketIO(server);
-
-io.on("connection", socket => {
-  console.log("User connected with id: ", socket.id);
-
-  socket.on("disconnect", () => {
-    console.log("user disconected with id ", socket.id);
-  });
+var app = express();
+var PORT = 5000;
+server = app.listen(PORT, function() {
+  console.log(`server is running on port ${PORT}`);
 });
 
-server.listen(port, () => {
-  console.log(`Listening on port ${port}`);
+io = socket(server);
+
+io.on("connection", socket => {
+  console.log(`connected user with id: ${socket.id}`);
+
+  socket.on("disconnect", () => {
+    console.log(`disonnected user with id: ${socket.id}`);
+  });
+
+  socket.on("typing", user => {
+    socket.broadcast.emit("typing", user);
+  });
+
+  socket.on("nottyping", user => {
+    socket.broadcast.emit("nottyping", user);
+  });
+
+  socket.on("SEND_MESSAGE", function(data) {
+    io.emit("RECEIVE_MESSAGE", data);
+  });
 });
