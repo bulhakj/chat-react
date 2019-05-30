@@ -1,5 +1,9 @@
 import React from "react";
 import socketIOClient from "socket.io-client";
+import Message from "./Message";
+import SendMessageButton from "./SendMessageButton";
+import UsernameInput from "./UsernameInput";
+import MessageWindow from "./MessageWindow";
 
 const socket = socketIOClient("http://localhost:5000");
 class Chat extends React.Component {
@@ -10,7 +14,6 @@ class Chat extends React.Component {
       username: "",
       message: "",
       messages: [],
-      backInfo: "",
       isTyping: false,
       typingSocket: false,
       timeout: undefined
@@ -53,19 +56,11 @@ class Chat extends React.Component {
     });
   }
 
-  handleEnterSend = e => {
-    if (e.key === "Enter") {
-      this.sendMessage(e);
-    }
-  };
-
-  handleInputChanges = e => {
+  handleUpdateInputChanges = props => {
     this.setState({
-      message: e.target.value,
+      message: props,
       isTyping: true
     });
-    this.onKeyDownNotEnter();
-    this.handleEnterSend(e);
   };
 
   timeoutFunction = () => {
@@ -87,12 +82,20 @@ class Chat extends React.Component {
       this.setState({ timeout: setTimeout(this.timeoutFunction, 1200) });
     }
   };
+
+  handleUpdateUsername = props => {
+    this.setState({
+      username: props
+    });
+  };
+
   render() {
     return (
       <div>
         <div>
           <div>Global Chat</div>
           <hr />
+          <MessageWindow />
           <div>
             {this.state.messages.map(message => {
               return (
@@ -105,23 +108,13 @@ class Chat extends React.Component {
           <p>{this.state.typingSocket ? `Someone is typing ...` : null}</p>
         </div>
         <div>
-          <input
-            type="text"
-            placeholder="Username"
-            value={this.state.username}
-            onChange={ev =>
-              this.setState({
-                username: ev.target.value
-              })
-            }
-          />
+          <UsernameInput updateUsername={this.handleUpdateUsername} />
           <br />
-          <input
-            type="text"
-            placeholder="Message"
+          <Message
             value={this.state.message}
-            onChange={this.handleInputChanges}
-            onKeyUp={this.handleEnterSend}
+            sendMessage={this.sendMessage}
+            onKeyDownNotEnter={this.onKeyDownNotEnter}
+            handleUpdateInputChanges={this.handleUpdateInputChanges}
           />
           <br />
           <button onClick={this.sendMessage}>Send</button>
