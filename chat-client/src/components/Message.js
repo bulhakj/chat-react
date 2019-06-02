@@ -36,7 +36,6 @@ class MessageInput extends React.Component {
       var timeout = setTimeout(this.timeoutFunction, 1200);
       console.log(timeout);
       this.props.handleUpdateTimeout(timeout);
-      // socket.emit("typing");
     } else {
       console.log("in false");
       socket.emit("typing");

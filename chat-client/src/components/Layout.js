@@ -18,34 +18,6 @@ class Chat extends React.Component {
       typingSocket: false,
       timeout: undefined
     };
-
-    // socket.on("RECEIVE_MESSAGE", function(data) {
-    //   addMessage(data);
-    // });
-
-    // const addMessage = data => {
-    //   console.log(data);
-    //   this.setState({
-    //     messages: [...this.state.messages, data],
-    //     backInfo: ""
-    //   });
-    // };
-
-    // const handleUpdateAddMessage = props => {
-    //   this.setState({
-    //     messages: [...this.state.messages, props],
-    //     backInfo: ""
-    //   });
-    // };
-
-    //   this.sendMessage = e => {
-    //     e.preventDefault();
-    //     socket.emit("SEND_MESSAGE", {
-    //       author: this.state.username,
-    //       message: this.state.message
-    //     });
-    //     this.setState({ message: "" });
-    //   };
   }
 
   handleUpdateAddMessage = props => {
@@ -81,15 +53,6 @@ class Chat extends React.Component {
     });
   };
 
-  //
-  // handleUpdateTimeoutFunction = props => {
-  //   this.setState({
-  //     isTyping: props
-  //   });
-  //   socket.emit("nottyping");
-  // };
-
-  //
   handleUpdateIsTyping = props => {
     this.setState({
       isTyping: props
@@ -102,26 +65,6 @@ class Chat extends React.Component {
       timeout: props
     });
   };
-
-  // timeoutFunction = () => {
-  //   this.setState({
-  //     isTyping: false
-  //   });
-  //   socket.emit("nottyping");
-  // };
-
-  // onKeyDownNotEnter = () => {
-  //   if (this.state.isTyping === false) {
-  //     this.setState({
-  //       isTyping: true,
-  //       timeout: setTimeout(this.timeoutFunction, 5000)
-  //     });
-  //   } else {
-  //     socket.emit("typing");
-  //     clearTimeout(this.state.timeout);
-  //     this.setState({ timeout: setTimeout(this.timeoutFunction, 1200) });
-  //   }
-  // };
 
   handleUpdateUsername = props => {
     this.setState({
