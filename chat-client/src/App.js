@@ -3,9 +3,9 @@ import "./App.css";
 import Layout from "./components/Layout";
 
 class App extends Component {
-  state = {
-    endpoint: "http://localhost:5000/"
-  };
+  // state = {
+  //   endpoint: "http://localhost:5000/"
+  // };
 
   render() {
     return (

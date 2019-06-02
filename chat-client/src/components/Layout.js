@@ -19,69 +19,109 @@ class Chat extends React.Component {
       timeout: undefined
     };
 
-    socket.on("RECEIVE_MESSAGE", function(data) {
-      addMessage(data);
-    });
+    // socket.on("RECEIVE_MESSAGE", function(data) {
+    //   addMessage(data);
+    // });
 
-    const addMessage = data => {
-      console.log(data);
-      this.setState({
-        messages: [...this.state.messages, data],
-        backInfo: ""
-      });
-      console.log(this.state.messages);
-    };
+    // const addMessage = data => {
+    //   console.log(data);
+    //   this.setState({
+    //     messages: [...this.state.messages, data],
+    //     backInfo: ""
+    //   });
+    // };
 
-    this.sendMessage = e => {
-      e.preventDefault();
-      socket.emit("SEND_MESSAGE", {
-        author: this.state.username,
-        message: this.state.message
-      });
-      this.setState({ message: "" });
-    };
+    // const handleUpdateAddMessage = props => {
+    //   this.setState({
+    //     messages: [...this.state.messages, props],
+    //     backInfo: ""
+    //   });
+    // };
+
+    //   this.sendMessage = e => {
+    //     e.preventDefault();
+    //     socket.emit("SEND_MESSAGE", {
+    //       author: this.state.username,
+    //       message: this.state.message
+    //     });
+    //     this.setState({ message: "" });
+    //   };
   }
 
-  componentDidMount() {
-    socket.on("typing", () => {
-      this.setState({
-        typingSocket: true
-      });
+  handleUpdateAddMessage = props => {
+    this.setState({
+      messages: [...this.state.messages, props],
+      backInfo: ""
     });
+  };
 
-    socket.on("nottyping", () => {
-      this.setState({
-        typingSocket: false
-      });
+  handleClearMessage = () => {
+    this.setState({
+      message: ""
     });
-  }
+  };
+
+  handleUpdateTyping = props => {
+    this.setState({
+      typingSocket: props
+    });
+  };
+
+  handleUpdateNotTyping = props => {
+    console.log(`ustawiam pisanie na false`);
+    this.setState({
+      typingSocket: props
+    });
+  };
 
   handleUpdateInputChanges = props => {
     this.setState({
-      message: props,
-      isTyping: true
+      message: props
+      // isTyping: true
     });
   };
 
-  timeoutFunction = () => {
+  //
+  // handleUpdateTimeoutFunction = props => {
+  //   this.setState({
+  //     isTyping: props
+  //   });
+  //   socket.emit("nottyping");
+  // };
+
+  //
+  handleUpdateIsTyping = props => {
     this.setState({
-      isTyping: false
+      isTyping: props
+      // timeout: props
     });
-    socket.emit("nottyping");
   };
 
-  onKeyDownNotEnter = () => {
-    if (this.state.isTyping === false) {
-      this.setState({
-        isTyping: true,
-        timeout: setTimeout(this.timeoutFunction, 5000)
-      });
-    } else {
-      socket.emit("typing");
-      clearTimeout(this.state.timeout);
-      this.setState({ timeout: setTimeout(this.timeoutFunction, 1200) });
-    }
+  handleUpdateTimeout = props => {
+    this.setState({
+      timeout: props
+    });
   };
+
+  // timeoutFunction = () => {
+  //   this.setState({
+  //     isTyping: false
+  //   });
+  //   socket.emit("nottyping");
+  // };
+
+  // onKeyDownNotEnter = () => {
+  //   if (this.state.isTyping === false) {
+  //     this.setState({
+  //       isTyping: true,
+  //       timeout: setTimeout(this.timeoutFunction, 5000)
+  //     });
+  //   } else {
+  //     socket.emit("typing");
+  //     clearTimeout(this.state.timeout);
+  //     this.setState({ timeout: setTimeout(this.timeoutFunction, 1200) });
+  //   }
+  // };
 
   handleUpdateUsername = props => {
     this.setState({
@@ -115,6 +155,16 @@ class Chat extends React.Component {
             sendMessage={this.sendMessage}
             onKeyDownNotEnter={this.onKeyDownNotEnter}
             handleUpdateInputChanges={this.handleUpdateInputChanges}
+            clearMessage={this.handleClearMessage}
+            username={this.state.username}
+            message={this.state.message}
+            handleUpdateTyping={this.handleUpdateTyping}
+            handleUpdateNotTyping={this.handleUpdateNotTyping}
+            handleUpdateAddMessage={this.handleUpdateAddMessage}
+            isTyping={this.state.isTyping}
+            handleUpdateIsTyping={this.handleUpdateIsTyping}
+            handleUpdateTimeout={this.handleUpdateTimeout}
+            timeoutValue={this.state.timeout}
           />
           <br />
           <button onClick={this.sendMessage}>Send</button>
