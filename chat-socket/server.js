@@ -18,10 +18,12 @@ io.on("connection", socket => {
 
   socket.on("typing", user => {
     socket.broadcast.emit("typing", user);
+    console.log("pisze");
   });
 
   socket.on("nottyping", user => {
     socket.broadcast.emit("nottyping", user);
+    console.log("nie pisze");
   });
 
   socket.on("SEND_MESSAGE", function(data) {
