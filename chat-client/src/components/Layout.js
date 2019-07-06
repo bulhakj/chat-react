@@ -25,11 +25,11 @@ class Chat extends React.Component {
   }
 
   componentDidMount = () => {
-    console.log("komponent załadowany");
-    const username = prompt("podaj swój nick");
     this.setState({
-      username: username
+      username: this.props.nickname
     });
+    const username = this.props.nickname;
+    console.log("komponent załadowany");
     console.log(username);
     socket.emit("adduser", username);
     socket.on("updatechat", (username, data) => {

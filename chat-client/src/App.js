@@ -1,16 +1,31 @@
 import React, { Component } from "react";
 import "./App.css";
 import Layout from "./components/Layout";
+import NicknameScreen from "./components/NicknameScreen";
 
 class App extends Component {
-  // state = {
-  //   endpoint: "http://localhost:5000/"
-  // };
+  state = {
+    isNickname: false,
+    nickname: ""
+  };
+
+  handleUpdateNickname = props => {
+    this.setState({
+      isNickname: true,
+      nickname: props
+    });
+  };
 
   render() {
     return (
       <div>
-        <Layout title="This is the Layout" />
+        {this.state.isNickname ? (
+          <div>
+            <Layout nickname={this.state.nickname} title="This is the Layout" />
+          </div>
+        ) : (
+          <NicknameScreen handleUpdateNickname={this.handleUpdateNickname} />
+        )}
       </div>
     );
   }
