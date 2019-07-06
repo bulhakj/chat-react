@@ -4,6 +4,8 @@ import Message from "./Message";
 import SendMessageButton from "./SendMessageButton";
 import UsernameInput from "./UsernameInput";
 import MessageWindow from "./MessageWindow";
+import InformationBar from "./InformationBar";
+import CurrentRoomInfo from "./CurrentRoomInfo";
 
 const socket = socketIOClient("http://localhost:5000");
 class Chat extends React.Component {
@@ -16,9 +18,27 @@ class Chat extends React.Component {
       messages: [],
       isTyping: false,
       typingSocket: false,
-      timeout: undefined
+      timeout: undefined,
+      connectionInformation: "",
+      currentRoom: "general"
     };
   }
+
+  componentDidMount = () => {
+    console.log("komponent załadowany");
+    const username = prompt("podaj swój nick");
+    this.setState({
+      username: username
+    });
+    console.log(username);
+    socket.emit("adduser", username);
+    socket.on("updatechat", (username, data) => {
+      console.log(`${data}`);
+      this.setState({
+        connectionInformation: data
+      });
+    });
+  };
 
   handleUpdateAddMessage = props => {
     this.setState({
@@ -77,6 +97,7 @@ class Chat extends React.Component {
       <div>
         <div>
           <div>Global Chat</div>
+          <CurrentRoomInfo currentRoom={this.state.currentRoom} />
           <hr />
           <MessageWindow />
           <div>
@@ -91,7 +112,10 @@ class Chat extends React.Component {
           <p>{this.state.typingSocket ? `Someone is typing ...` : null}</p>
         </div>
         <div>
-          <UsernameInput updateUsername={this.handleUpdateUsername} />
+          <UsernameInput
+            username={this.state.username}
+            updateUsername={this.handleUpdateUsername}
+          />
           <br />
           <Message
             value={this.state.message}
@@ -108,6 +132,9 @@ class Chat extends React.Component {
             handleUpdateIsTyping={this.handleUpdateIsTyping}
             handleUpdateTimeout={this.handleUpdateTimeout}
             timeoutValue={this.state.timeout}
+          />
+          <InformationBar
+            connectionInformation={this.state.connectionInformation}
           />
           <br />
           <button onClick={this.sendMessage}>Send</button>

@@ -31,13 +31,11 @@ class MessageInput extends React.Component {
 
   onKeyDownNotEnter = () => {
     if (this.props.isTyping === false) {
-      console.log("in false");
       this.props.handleUpdateIsTyping(true);
       var timeout = setTimeout(this.timeoutFunction, 1200);
       console.log(timeout);
       this.props.handleUpdateTimeout(timeout);
     } else {
-      console.log("in false");
       socket.emit("typing");
       console.log("timeout to clear", this.props.timeoutValue);
       clearTimeout(this.props.timeoutValue);
