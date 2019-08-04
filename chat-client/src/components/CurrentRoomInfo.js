@@ -1,12 +1,6 @@
 import React from "react";
 
-class CurrentRoomInfo extends React.Component {
-  state = {};
-
-  componentDidMount = () => {};
-
-  render() {
-    return <p>current room</p>;
-  }
-}
+const CurrentRoomInfo = props => {
+  return <p>current room {props.currentRoom}</p>;
+};
 export default CurrentRoomInfo;

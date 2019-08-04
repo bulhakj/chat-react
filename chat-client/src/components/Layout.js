@@ -6,6 +6,7 @@ import UsernameInput from "./UsernameInput";
 import MessageWindow from "./MessageWindow";
 import InformationBar from "./InformationBar";
 import CurrentRoomInfo from "./CurrentRoomInfo";
+import RoomsBar from "./RoomsBar";
 
 const socket = socketIOClient("http://localhost:5000");
 class Chat extends React.Component {
@@ -20,6 +21,7 @@ class Chat extends React.Component {
       typingSocket: false,
       timeout: undefined,
       connectionInformation: "",
+      chatRooms: ["general", "room1", "room2"],
       currentRoom: "general"
     };
   }
@@ -58,6 +60,7 @@ class Chat extends React.Component {
       typingSocket: props
     });
   };
+  NicknameScreen;
 
   handleUpdateNotTyping = props => {
     console.log(`ustawiam pisanie na false`);
@@ -92,11 +95,22 @@ class Chat extends React.Component {
     });
   };
 
+  handleUpdateActiveChatroom = props => {
+    console.log(`active chat: ${props}`);
+    this.setState({
+      currentRoom: props
+    });
+  };
+
   render() {
     return (
       <div>
         <div>
           <div>Global Chat</div>
+          <RoomsBar
+            handleUpdateActiveChatroom={this.handleUpdateActiveChatroom}
+            chatRooms={this.state.chatRooms}
+          />
           <CurrentRoomInfo currentRoom={this.state.currentRoom} />
           <hr />
           <MessageWindow />

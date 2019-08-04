@@ -7,7 +7,7 @@ server = app.listen(PORT, function() {
   console.log(`server is running on port ${PORT}`);
 });
 
-var rooms = ["general", "room2", "room3"];
+var rooms = ["general", "room1", "room2"];
 var usernames = {};
 
 io = socket(server);
@@ -57,7 +57,7 @@ io.on("connection", socket => {
 
   socket.on("disconnect", () => {
     console.log(`disonnected user with id: ${socket.id}`);
-    //remove the username from global usernames list
+    //remove the username from< global usernames list
     delete usernames[socket.username];
     //update list of users in chat, client-side
     io.sockets.emit("updateusers", usernames);
