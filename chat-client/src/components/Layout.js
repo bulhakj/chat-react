@@ -40,9 +40,16 @@ class Chat extends React.Component {
         connectionInformation: data
       });
     });
+
+    socket.on("RECEIVE_MESSAGE", data => {
+      console.log(`receive message`);
+      console.log(data);
+      this.handleUpdateAddMessage(data);
+    });
   };
 
   handleUpdateAddMessage = props => {
+    console.log(`dodano message do tablicy`);
     this.setState({
       messages: [...this.state.messages, props],
       backInfo: ""
@@ -60,7 +67,6 @@ class Chat extends React.Component {
       typingSocket: props
     });
   };
-  NicknameScreen;
 
   handleUpdateNotTyping = props => {
     console.log(`ustawiam pisanie na false`);
@@ -72,14 +78,12 @@ class Chat extends React.Component {
   handleUpdateInputChanges = props => {
     this.setState({
       message: props
-      // isTyping: true
     });
   };
 
   handleUpdateIsTyping = props => {
     this.setState({
       isTyping: props
-      // timeout: props
     });
   };
 
@@ -100,6 +104,7 @@ class Chat extends React.Component {
     this.setState({
       currentRoom: props
     });
+    socket.emit("switchRoom", props);
   };
 
   render() {
@@ -134,6 +139,7 @@ class Chat extends React.Component {
           <Message
             value={this.state.message}
             sendMessage={this.sendMessage}
+            currentRoom={this.state.currentRoom}
             onKeyDownNotEnter={this.onKeyDownNotEnter}
             handleUpdateInputChanges={this.handleUpdateInputChanges}
             clearMessage={this.handleClearMessage}

@@ -17,9 +17,10 @@ class MessageInput extends React.Component {
       this.props.handleUpdateNotTyping(false);
     });
 
-    socket.on("RECEIVE_MESSAGE", data => {
-      console.log(data);
-      this.props.handleUpdateAddMessage(data);
+    socket.on("RECEIVE_MESSAGE", username => {
+      console.log(`receive message`);
+      console.log(username);
+      this.props.handleUpdateAddMessage(username);
     });
   };
 
@@ -50,11 +51,19 @@ class MessageInput extends React.Component {
   };
 
   sendMessage = e => {
-    e.preventDefault();
-    socket.emit("SEND_MESSAGE", {
-      author: this.props.username,
-      message: this.props.message
+    socket.on("updatechat", function(username, data) {
+      // $('#conversation').append('<b>'+username + ':</b> ' + data + '<br>');
     });
+    e.preventDefault();
+    socket.emit(
+      "SEND_MESSAGE",
+      {
+        author: this.props.username,
+        message: this.props.message,
+        currentRoom: this.props.currentRoom
+      },
+      this.state.currentRoom
+    );
     this.props.clearMessage();
   };
 
