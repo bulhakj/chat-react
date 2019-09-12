@@ -13,16 +13,17 @@ var usernames = {};
 io = socket(server);
 
 io.on("connection", socket => {
-  console.log(`connected user with id: ${socket.id}`);
+  // console.log(`connected user with id: ${socket.id}`);
 
   socket.on("adduser", username => {
+    console.log(`connected user with id inside: ${socket.id}`);
     console.log(username);
     //store the username in socket session for this client
     socket.username = username;
     console.log(`socket username = ${socket.username}`);
     //store the room name in the socket session for this client
-    socket.room = "general";
-    console.log(`socket room: ${socket.room}`);
+    socket.room = rooms[0];
+    // console.log(`socket room: ${socket.room}`);
     // add the client's username to the global list
     usernames[username] = username;
     // send client to the room general
@@ -34,6 +35,8 @@ io.on("connection", socket => {
       .to("general")
       .emit("updatechat", "SERVER", username + " has connected to this room.");
     socket.emit("updaterooms", rooms, "general");
+    console.log(io.sockets.adapter.rooms);
+    console.log(socket.rooms);
   });
 
   // when the client emits 'sendchat' this listens and executes
@@ -51,7 +54,7 @@ io.on("connection", socket => {
     socket.room = newroom;
     socket.broadcast
       .to(newroom)
-      .emit("updatechat", "SERVER", socket.useranem + " has joined this room.");
+      .emit("updatechat", "SERVER", socket.username + " has joined this room.");
     socket.emit("updaterooms", rooms, newroom);
   });
 
@@ -70,13 +73,18 @@ io.on("connection", socket => {
     socket.leave(socket.room);
   });
 
-  socket.on("typing", user => {
-    socket.broadcast.emit("typing", user);
-    console.log("pisze");
+  socket.on("typing", currentRoom => {
+    console.log(socket.rooms);
+    //hotfix
+    socket.join(currentRoom);
+    // console.log(user);
+    console.log(`received typing, current room: ${currentRoom}`);
+    socket.broadcast.to(currentRoom).emit("typing", "SERVER");
   });
 
   socket.on("nottyping", user => {
-    socket.broadcast.emit("nottyping", user);
+    // socket.broadcast.emit("nottyping", user);
+    socket.broadcast.emit("nottyping");
     console.log("nie pisze");
   });
 

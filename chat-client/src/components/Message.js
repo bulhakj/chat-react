@@ -8,6 +8,7 @@ class MessageInput extends React.Component {
 
   componentDidMount = props => {
     socket.on("typing", () => {
+      console.log(`mounted message typing`);
       console.log(`odebrano typing`);
       this.props.handleUpdateTyping(true);
     });
@@ -34,11 +35,9 @@ class MessageInput extends React.Component {
     if (this.props.isTyping === false) {
       this.props.handleUpdateIsTyping(true);
       var timeout = setTimeout(this.timeoutFunction, 1200);
-      console.log(timeout);
       this.props.handleUpdateTimeout(timeout);
     } else {
-      socket.emit("typing");
-      console.log("timeout to clear", this.props.timeoutValue);
+      socket.emit("typing", this.props.currentRoom);
       clearTimeout(this.props.timeoutValue);
       this.props.handleUpdateTimeout(setTimeout(this.timeoutFunction, 1200));
     }
