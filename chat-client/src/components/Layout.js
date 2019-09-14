@@ -63,6 +63,8 @@ class Chat extends React.Component {
   };
 
   handleUpdateTyping = props => {
+    console.log(`update typing props: ${props}`);
+    console.log("update pisania");
     this.setState({
       typingSocket: props
     });

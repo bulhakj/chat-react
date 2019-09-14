@@ -7,14 +7,19 @@ class MessageInput extends React.Component {
   state = {};
 
   componentDidMount = props => {
-    socket.on("typing", () => {
-      console.log(`odebrano typing`);
-      this.props.handleUpdateTyping(true);
+    socket.on("typing", props => {
+      if (this.props.currentRoom === props) {
+        this.props.handleUpdateTyping(true);
+        console.log(`odebrano typing`);
+      }
     });
 
-    socket.on("nottyping", () => {
-      console.log(`odebrano not typing`);
-      this.props.handleUpdateNotTyping(false);
+    socket.on("nottyping", props => {
+      console.log(props);
+      if (this.props.currentRoom === props) {
+        this.props.handleUpdateNotTyping(false);
+        console.log(`odebrano not typing`);
+      }
     });
 
     socket.on("RECEIVE_MESSAGE", username => {
@@ -24,10 +29,10 @@ class MessageInput extends React.Component {
     });
   };
 
-  timeoutFunction = () => {
+  timeoutFunction = props => {
     console.log("in timeout");
     this.props.handleUpdateIsTyping(false);
-    socket.emit("nottyping");
+    socket.emit("nottyping", this.props.currentRoom);
   };
 
   onKeyDownNotEnter = () => {
@@ -37,7 +42,13 @@ class MessageInput extends React.Component {
       console.log(timeout);
       this.props.handleUpdateTimeout(timeout);
     } else {
-      socket.emit("typing");
+      socket.emit(
+        "typing",
+        {
+          currentRoom: this.props.currentRoom
+        },
+        this.state.currentRoom
+      );
       console.log("timeout to clear", this.props.timeoutValue);
       clearTimeout(this.props.timeoutValue);
       this.props.handleUpdateTimeout(setTimeout(this.timeoutFunction, 1200));
@@ -51,9 +62,7 @@ class MessageInput extends React.Component {
   };
 
   sendMessage = e => {
-    socket.on("updatechat", function(username, data) {
-      // $('#conversation').append('<b>'+username + ':</b> ' + data + '<br>');
-    });
+    socket.on("updatechat", function(username, data) {});
     e.preventDefault();
     socket.emit(
       "SEND_MESSAGE",
