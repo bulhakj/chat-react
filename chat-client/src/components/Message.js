@@ -7,38 +7,48 @@ class MessageInput extends React.Component {
   state = {};
 
   componentDidMount = props => {
-    socket.on("typing", () => {
-      console.log(`odebrano typing`);
-      this.props.handleUpdateTyping(true);
+    socket.on("typing", props => {
+      if (this.props.currentRoom === props) {
+        this.props.handleUpdateTyping(true);
+        console.log(`odebrano typing`);
+      }
     });
 
-    socket.on("nottyping", () => {
-      console.log(`odebrano not typing`);
-      this.props.handleUpdateNotTyping(false);
+    socket.on("nottyping", props => {
+      console.log(props);
+      if (this.props.currentRoom === props) {
+        this.props.handleUpdateNotTyping(false);
+        console.log(`odebrano not typing`);
+      }
     });
 
-    socket.on("RECEIVE_MESSAGE", data => {
-      console.log(data);
-      this.props.handleUpdateAddMessage(data);
+    socket.on("RECEIVE_MESSAGE", username => {
+      console.log(`receive message`);
+      console.log(username);
+      this.props.handleUpdateAddMessage(username);
     });
   };
 
-  timeoutFunction = () => {
+  timeoutFunction = props => {
     console.log("in timeout");
     this.props.handleUpdateIsTyping(false);
-    socket.emit("nottyping");
+    socket.emit("nottyping", this.props.currentRoom);
   };
 
   onKeyDownNotEnter = () => {
     if (this.props.isTyping === false) {
-      console.log("in false");
       this.props.handleUpdateIsTyping(true);
       var timeout = setTimeout(this.timeoutFunction, 1200);
       console.log(timeout);
       this.props.handleUpdateTimeout(timeout);
     } else {
-      console.log("in false");
-      socket.emit("typing");
+      socket.emit(
+        "typing",
+        {
+          currentRoom: this.props.currentRoom
+        },
+        this.state.currentRoom
+      );
       console.log("timeout to clear", this.props.timeoutValue);
       clearTimeout(this.props.timeoutValue);
       this.props.handleUpdateTimeout(setTimeout(this.timeoutFunction, 1200));
@@ -52,11 +62,17 @@ class MessageInput extends React.Component {
   };
 
   sendMessage = e => {
+    socket.on("updatechat", function(username, data) {});
     e.preventDefault();
-    socket.emit("SEND_MESSAGE", {
-      author: this.props.username,
-      message: this.props.message
-    });
+    socket.emit(
+      "SEND_MESSAGE",
+      {
+        author: this.props.username,
+        message: this.props.message,
+        currentRoom: this.props.currentRoom
+      },
+      this.state.currentRoom
+    );
     this.props.clearMessage();
   };
 

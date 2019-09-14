@@ -5,8 +5,9 @@ const UsernameInput = props => {
     <input
       type="text"
       placeholder="Username"
-      value={props.value}
+      value={props.username}
       onChange={event => props.updateUsername(event.target.value)}
+      disabled={true}
     />
   );
 };
