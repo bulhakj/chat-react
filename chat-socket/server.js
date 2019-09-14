@@ -51,7 +51,7 @@ io.on("connection", socket => {
     socket.room = newroom;
     socket.broadcast
       .to(newroom)
-      .emit("updatechat", "SERVER", socket.useranem + " has joined this room.");
+      .emit("updatechat", "SERVER", socket.username + " has joined this room.");
     socket.emit("updaterooms", rooms, newroom);
   });
 
@@ -70,17 +70,28 @@ io.on("connection", socket => {
     socket.leave(socket.room);
   });
 
-  socket.on("typing", user => {
-    socket.broadcast.emit("typing", user);
+  socket.on("typing", data => {
+    // socket.broadcast.to(data.currentRoom).emit("typing", data);
+    // socket.to(data.currentRoom).emit("typing", data);
+    socket.broadcast.emit("typing", data.currentRoom);
     console.log("pisze");
+    console.log(data);
+    console.log(socket.id);
+    console.log(socket.rooms);
+    //checking length of users to know if users are in the same room
+    io.in(data.currentRoom).clients(function(error, clients) {
+      var numClients = clients.length;
+      console.log(numClients);
+    });
   });
 
-  socket.on("nottyping", user => {
-    socket.broadcast.emit("nottyping", user);
+  socket.on("nottyping", data => {
+    socket.broadcast.emit("nottyping", data);
     console.log("nie pisze");
   });
 
   socket.on("SEND_MESSAGE", function(data) {
-    io.emit("RECEIVE_MESSAGE", data);
+    console.log(data);
+    socket.to(data.currentRoom).emit("RECEIVE_MESSAGE", data);
   });
 });
