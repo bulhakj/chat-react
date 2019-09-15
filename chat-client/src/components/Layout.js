@@ -7,6 +7,7 @@ import MessageWindow from "./MessageWindow";
 import InformationBar from "./InformationBar";
 import CurrentRoomInfo from "./CurrentRoomInfo";
 import RoomsBar from "./RoomsBar";
+import ConnectedUsers from "./ConnectedUsers";
 
 const socket = socketIOClient("http://localhost:5000");
 class Chat extends React.Component {
@@ -160,6 +161,9 @@ class Chat extends React.Component {
           />
           <br />
           <button onClick={this.sendMessage}>Send</button>
+        </div>
+        <div>
+          <ConnectedUsers />
         </div>
       </div>
     );

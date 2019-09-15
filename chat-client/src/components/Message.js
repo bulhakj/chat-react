@@ -7,16 +7,15 @@ class MessageInput extends React.Component {
   state = {};
 
   componentDidMount = props => {
-    socket.on("typing", props => {
-      if (this.props.currentRoom === props) {
+    socket.on("typing", serverRoom => {
+      if (this.props.currentRoom === serverRoom) {
         this.props.handleUpdateTyping(true);
         console.log(`odebrano typing`);
       }
     });
 
-    socket.on("nottyping", props => {
-      console.log(props);
-      if (this.props.currentRoom === props) {
+    socket.on("nottyping", serverRoom => {
+      if (this.props.currentRoom === serverRoom) {
         this.props.handleUpdateNotTyping(false);
         console.log(`odebrano not typing`);
       }

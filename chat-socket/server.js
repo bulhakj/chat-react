@@ -24,7 +24,7 @@ io.on("connection", socket => {
     socket.room = "general";
     console.log(`socket room: ${socket.room}`);
     // add the client's username to the global list
-    usernames[username] = username;
+    usernames[String(username)] = socket.id;
     // send client to the room general
     socket.join("general");
     //echo to client they've connected
@@ -34,6 +34,7 @@ io.on("connection", socket => {
       .to("general")
       .emit("updatechat", "SERVER", username + " has connected to this room.");
     socket.emit("updaterooms", rooms, "general");
+    console.log(usernames);
   });
 
   // when the client emits 'sendchat' this listens and executes
@@ -71,8 +72,6 @@ io.on("connection", socket => {
   });
 
   socket.on("typing", data => {
-    // socket.broadcast.to(data.currentRoom).emit("typing", data);
-    // socket.to(data.currentRoom).emit("typing", data);
     socket.broadcast.emit("typing", data.currentRoom);
     console.log("pisze");
     console.log(data);
@@ -81,7 +80,11 @@ io.on("connection", socket => {
     //checking length of users to know if users are in the same room
     io.in(data.currentRoom).clients(function(error, clients) {
       var numClients = clients.length;
+      var testClients = clients;
       console.log(numClients);
+      console.log(testClients);
+      let user = usernames["qwe"];
+      console.log(user);
     });
   });
 
