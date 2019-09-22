@@ -18,13 +18,16 @@ io.on("connection", socket => {
   socket.on("adduser", username => {
     console.log(username);
     //store the username in socket session for this client
-    socket.username = username;
-    console.log(`socket username = ${socket.username}`);
+
+    // socket.username = username;
+    // console.log(`socket username = ${socket.username}`);
+    // console.log(usernames);
+
     //store the room name in the socket session for this client
     socket.room = "general";
     console.log(`socket room: ${socket.room}`);
     // add the client's username to the global list
-    usernames[String(username)] = socket.id;
+    // usernames[String(username)] = socket.id;
     // send client to the room general
     socket.join("general");
     //echo to client they've connected
@@ -34,7 +37,18 @@ io.on("connection", socket => {
       .to("general")
       .emit("updatechat", "SERVER", username + " has connected to this room.");
     socket.emit("updaterooms", rooms, "general");
-    console.log(usernames);
+  });
+
+  socket.on("VIEW_CONNECTED_USERS", (username, currentRoom) => {
+    if (username !== "") {
+      console.log(username);
+      socket.username = username;
+      console.log("this usernames ", this.usernames);
+      usernames[String(username)] = socket.id;
+      console.log(usernames);
+      console.log(currentRoom);
+      socket.emit("VIEW_CONNECTED_USERS", usernames, currentRoom);
+    }
   });
 
   // when the client emits 'sendchat' this listens and executes
@@ -83,8 +97,8 @@ io.on("connection", socket => {
       var testClients = clients;
       console.log(numClients);
       console.log(testClients);
-      let user = usernames["qwe"];
-      console.log(user);
+      // let user = usernames["qwe"];
+      // console.log(user);
     });
   });
 

@@ -9,7 +9,8 @@ import CurrentRoomInfo from "./CurrentRoomInfo";
 import RoomsBar from "./RoomsBar";
 import ConnectedUsers from "./ConnectedUsers";
 
-const socket = socketIOClient("http://localhost:5000");
+const server = process.env.REACT_APP_SERVER;
+const socket = socketIOClient(server);
 class Chat extends React.Component {
   constructor(props) {
     super(props);
@@ -34,7 +35,7 @@ class Chat extends React.Component {
     const username = this.props.nickname;
     console.log("komponent załadowany");
     console.log(username);
-    socket.emit("adduser", username);
+    socket.emit("adduser", this.props.nickname);
     socket.on("updatechat", (username, data) => {
       console.log(`${data}`);
       this.setState({
@@ -140,6 +141,7 @@ class Chat extends React.Component {
           />
           <br />
           <Message
+            socket={this.state.socket}
             value={this.state.message}
             sendMessage={this.sendMessage}
             currentRoom={this.state.currentRoom}
@@ -163,7 +165,11 @@ class Chat extends React.Component {
           <button onClick={this.sendMessage}>Send</button>
         </div>
         <div>
-          <ConnectedUsers />
+          <ConnectedUsers
+            key={ConnectedUsers}
+            username={this.state.username}
+            currentRoom={this.state.currentRoom}
+          />
         </div>
       </div>
     );

@@ -2,11 +2,11 @@ import React from "react";
 import socketIOClient from "socket.io-client";
 
 const socket = socketIOClient("http://localhost:5000");
-
 class MessageInput extends React.Component {
   state = {};
 
   componentDidMount = props => {
+    console.log(this.props.socket);
     socket.on("typing", serverRoom => {
       if (this.props.currentRoom === serverRoom) {
         this.props.handleUpdateTyping(true);
