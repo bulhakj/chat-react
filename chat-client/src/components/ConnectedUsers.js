@@ -2,36 +2,31 @@ import React, { Component } from "react";
 import socketIOClient from "socket.io-client";
 const server = process.env.REACT_APP_SERVER;
 const socket = socketIOClient(server);
-let connectedUsers;
 class ConnectedUsers extends Component {
   state = {
-    usersConnected: ""
+    usersConnected: "",
+    currentRoom: this.props.currentRoom
   };
 
-  componentDidUpdate = (props, state) => {
-    console.log("props: ", props);
-    console.log("state: ", state);
-
-    console.log(`connected users - MOUNTED`);
-    if (props.username !== "") {
-      socket.emit("VIEW_CONNECTED_USERS", props.username, props.currentRoom);
-    }
-    socket.on("VIEW_CONNECTED_USERS", (usernames, currentRoom) => {
-      if (currentRoom === props.currentRoom) {
-        console.log("usernames", usernames);
-        this.connectedUsers = usernames;
-        console.log("connected users inside", this.connectedUsers);
-        // if (this.state.usersConnected !== this.connectedUsers) {
-        //   this.setState({
-        //     usersConnected: this.connectedUsers,
-        //   });
-        // }
-      }
+  componentDidMount = () => {
+    console.log(`mounted connected users`);
+    socket.emit("GET_ROOM_USERS", this.state.currentRoom);
+    socket.on("SEND_ROOM_SOCKET_USERS", users => {
+      console.log(users);
     });
   };
 
   render() {
-    return <div>This is ConnectedUsers component</div>;
+    return (
+      <div>
+        this is connected user component
+        <ul>
+          {Object.keys(this.state.usersConnected).map(key => {
+            return <li>{key}</li>;
+          })}
+        </ul>
+      </div>
+    );
   }
 }
 

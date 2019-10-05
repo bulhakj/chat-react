@@ -1,7 +1,6 @@
 import React from "react";
 import socketIOClient from "socket.io-client";
 import Message from "./Message";
-import SendMessageButton from "./SendMessageButton";
 import UsernameInput from "./UsernameInput";
 import MessageWindow from "./MessageWindow";
 import InformationBar from "./InformationBar";
@@ -35,7 +34,13 @@ class Chat extends React.Component {
     const username = this.props.nickname;
     console.log("komponent załadowany");
     console.log(username);
-    socket.emit("adduser", this.props.nickname);
+    socket.emit("adduser", this.props.nickname, this.state.currentRoom);
+    socket.emit(
+      "VIEW_CONNECTED_USERS",
+      this.state.username,
+      this.state.currentRoom
+    );
+    console.log(`VIEW_CONNECTED_USERS in adduser`);
     socket.on("updatechat", (username, data) => {
       console.log(`${data}`);
       this.setState({
@@ -109,6 +114,12 @@ class Chat extends React.Component {
       currentRoom: props
     });
     socket.emit("switchRoom", props);
+    socket.emit(
+      "VIEW_CONNECTED_USERS",
+      this.state.username,
+      this.state.currentRoom
+    );
+    console.log(`VIEW_CONNECTED_USERS in switchRoom`);
   };
 
   render() {
