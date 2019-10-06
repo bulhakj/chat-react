@@ -35,17 +35,12 @@ class Chat extends React.Component {
     console.log("komponent załadowany");
     console.log(username);
     socket.emit("adduser", this.props.nickname, this.state.currentRoom);
-    socket.emit(
-      "VIEW_CONNECTED_USERS",
-      this.state.username,
-      this.state.currentRoom
-    );
-    console.log(`VIEW_CONNECTED_USERS in adduser`);
     socket.on("updatechat", (username, data) => {
       console.log(`${data}`);
       this.setState({
         connectionInformation: data
       });
+      socket.emit("GET_ROOM_USERS", this.state.currentRoom);
     });
 
     socket.on("RECEIVE_MESSAGE", data => {
@@ -110,16 +105,18 @@ class Chat extends React.Component {
 
   handleUpdateActiveChatroom = props => {
     console.log(`active chat: ${props}`);
-    this.setState({
-      currentRoom: props
-    });
-    socket.emit("switchRoom", props);
-    socket.emit(
-      "VIEW_CONNECTED_USERS",
-      this.state.username,
-      this.state.currentRoom
+    this.setState(
+      {
+        currentRoom: props
+      },
+      () => {
+        socket.emit("GET_ROOM_USERS", this.state.currentRoom);
+      }
     );
+    socket.emit("switchRoom", props);
     console.log(`VIEW_CONNECTED_USERS in switchRoom`);
+    socket.emit("GET_ROOM_USERS", this.state.currentRoom);
+    console.log(`after emit GET_ROOM_USERS`);
   };
 
   render() {
