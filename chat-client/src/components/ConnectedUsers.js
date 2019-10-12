@@ -21,7 +21,7 @@ class ConnectedUsers extends Component {
     }, 1000);
     this.checkUsers = setInterval(() => {
       socket.emit("GET_ROOM_USERS", this.props.currentRoom);
-    }, 4000);
+    }, 1000);
   };
 
   render() {

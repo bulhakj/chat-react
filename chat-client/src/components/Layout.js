@@ -113,7 +113,7 @@ class Chat extends React.Component {
         socket.emit("GET_ROOM_USERS", this.state.currentRoom);
       }
     );
-    socket.emit("switchRoom", props);
+    socket.emit("switchRoom", props, this.state.username);
     console.log(`VIEW_CONNECTED_USERS in switchRoom`);
     socket.emit("GET_ROOM_USERS", this.state.currentRoom);
     console.log(`after emit GET_ROOM_USERS`);

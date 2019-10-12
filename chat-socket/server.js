@@ -72,11 +72,17 @@ io.on("connection", socket => {
   );
 
   // when the client emits 'sendchat' this listens and executes
-  socket.on("switchRoom", newroom => {
+  socket.on("switchRoom", (newroom, username) => {
     //leave the current room (stored in session)
     socket.leave(socket.room);
     // join new room, recieved as function parameter
+    console.log(usernames);
     socket.join(newroom);
+    //Find index of specific object using findIndex method.
+    const userIndex = usernames.findIndex(user => user.nickname == username);
+    usernames[userIndex].room = newroom;
+    console.log("USERNAMES AFTER UPDATEEEEE: ", usernames);
+
     socket.emit(
       "updatechat",
       "SERVER",
@@ -104,6 +110,7 @@ io.on("connection", socket => {
           return newArray;
         }
       });
+
       socket.emit("SEND_ROOM_SOCKET_USERS", filteredUsers);
       console.log("FILTERED TABLE: ", filteredUsers);
     });
@@ -149,12 +156,12 @@ io.on("connection", socket => {
     console.log(socket.id);
     console.log(socket.rooms);
     //checking length of users to know if users are in the same room
-    io.in(data.currentRoom).clients(function(error, clients) {
-      var numClients = clients.length;
-      var testClients = clients;
-      console.log(numClients);
-      console.log(testClients);
-    });
+    // io.in(data.currentRoom).clients(function(error, clients) {
+    //   var numClients = clients.length;
+    //   var testClients = clients;
+    //   console.log(numClients);
+    //   console.log(testClients);
+    // });
   });
 
   socket.on("nottyping", data => {
