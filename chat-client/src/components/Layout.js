@@ -1,14 +1,15 @@
 import React from "react";
 import socketIOClient from "socket.io-client";
 import Message from "./Message";
-import SendMessageButton from "./SendMessageButton";
 import UsernameInput from "./UsernameInput";
 import MessageWindow from "./MessageWindow";
 import InformationBar from "./InformationBar";
 import CurrentRoomInfo from "./CurrentRoomInfo";
 import RoomsBar from "./RoomsBar";
+import ConnectedUsers from "./ConnectedUsers";
 
-const socket = socketIOClient("http://localhost:5000");
+const server = process.env.REACT_APP_SERVER;
+const socket = socketIOClient(server);
 class Chat extends React.Component {
   constructor(props) {
     super(props);
@@ -33,12 +34,13 @@ class Chat extends React.Component {
     const username = this.props.nickname;
     console.log("komponent załadowany");
     console.log(username);
-    socket.emit("adduser", username);
+    socket.emit("adduser", this.props.nickname, this.state.currentRoom);
     socket.on("updatechat", (username, data) => {
       console.log(`${data}`);
       this.setState({
         connectionInformation: data
       });
+      socket.emit("GET_ROOM_USERS", this.state.currentRoom);
     });
 
     socket.on("RECEIVE_MESSAGE", data => {
@@ -103,10 +105,18 @@ class Chat extends React.Component {
 
   handleUpdateActiveChatroom = props => {
     console.log(`active chat: ${props}`);
-    this.setState({
-      currentRoom: props
-    });
-    socket.emit("switchRoom", props);
+    this.setState(
+      {
+        currentRoom: props
+      },
+      () => {
+        socket.emit("GET_ROOM_USERS", this.state.currentRoom);
+      }
+    );
+    socket.emit("switchRoom", props, this.state.username);
+    console.log(`VIEW_CONNECTED_USERS in switchRoom`);
+    socket.emit("GET_ROOM_USERS", this.state.currentRoom);
+    console.log(`after emit GET_ROOM_USERS`);
   };
 
   render() {
@@ -139,6 +149,7 @@ class Chat extends React.Component {
           />
           <br />
           <Message
+            socket={this.state.socket}
             value={this.state.message}
             sendMessage={this.sendMessage}
             currentRoom={this.state.currentRoom}
@@ -160,6 +171,13 @@ class Chat extends React.Component {
           />
           <br />
           <button onClick={this.sendMessage}>Send</button>
+        </div>
+        <div>
+          <ConnectedUsers
+            key={ConnectedUsers}
+            username={this.state.username}
+            currentRoom={this.state.currentRoom}
+          />
         </div>
       </div>
     );

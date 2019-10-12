@@ -10,10 +10,17 @@ class App extends Component {
   };
 
   handleUpdateNickname = props => {
-    this.setState({
-      isNickname: true,
-      nickname: props
-    });
+    this.setState(
+      {
+        isNickname: true,
+        nickname: props
+      },
+      () => {
+        const { isNickname, nickname } = this.state;
+        localStorage.setItem("isNickname", isNickname);
+        localStorage.setItem("nickname", nickname);
+      }
+    );
   };
 
   render() {
