@@ -7,6 +7,14 @@ import InformationBar from "./InformationBar";
 import CurrentRoomInfo from "./CurrentRoomInfo";
 import RoomsBar from "./RoomsBar";
 import ConnectedUsers from "./ConnectedUsers";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import styled from "styled-components";
+
+const Background = styled.div`
+  background-color: red;
+  height: 100%;
+  width: 100%;
+`;
 
 const server = process.env.REACT_APP_SERVER;
 const socket = socketIOClient(server);
@@ -121,7 +129,7 @@ class Chat extends React.Component {
 
   render() {
     return (
-      <div>
+      <Background>
         <div>
           <div>Global Chat</div>
           <RoomsBar
@@ -179,7 +187,7 @@ class Chat extends React.Component {
             currentRoom={this.state.currentRoom}
           />
         </div>
-      </div>
+      </Background>
     );
   }
 }
