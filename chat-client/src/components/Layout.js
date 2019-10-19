@@ -5,9 +5,10 @@ import UsernameInput from "./UsernameInput";
 import MessageWindow from "./MessageWindow";
 import InformationBar from "./InformationBar";
 import CurrentRoomInfo from "./CurrentRoomInfo";
+import Emojis from "./Emojis";
+import SendButton from "./SendButton";
 import RoomsBar from "./RoomsBar";
 import ConnectedUsers from "./ConnectedUsers";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import styled from "styled-components";
 import { createGlobalStyle } from "styled-components";
 
@@ -26,7 +27,7 @@ const Background = styled.div`
 `;
 
 const LeftContainer = styled.section`
-  width: 15%;
+  width: 20%;
   border: 1px #fff solid;
   background-color: #2c2f33;
   border: none;
@@ -34,7 +35,7 @@ const LeftContainer = styled.section`
 `;
 const LeftHeader = styled.div`
   padding-left: 2.5rem;
-  height: 3vw;
+  height: 3.2vw;
   display: flex;
   align-items: center;
   box-shadow: 0px 4px 11px -6px #000;
@@ -44,6 +45,7 @@ const RoomHeader = styled.h3`
   margin-top: 0;
   margin-bottom: 0;
   height: auto;
+  font-weight: 400;
 `;
 const LeftContentWrapper = styled.div`
   color: #565656;
@@ -53,16 +55,48 @@ const LeftContentWrapper = styled.div`
 const RoomsWrapper = styled.div`
   margin-top: 2vw;
 `;
+
 const CenterContainer = styled.section`
-  width: 70%;
-  border: 1px #fff solid;
+  width: 60%;
+  background-color: #383c41;
 `;
-const CenterHeader = styled.div``;
-const CenterContentWrapper = styled.div``;
-const InputWrapper = styled.div``;
-const MessageWrapper = styled.div``;
+const CenterHeader = styled.div`
+  height: 3.2vw;
+  box-shadow: 0px 4px 11px -6px #000;
+  background-color: #383c41;
+  text-transform: uppercase;
+  color: #dadada;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+`;
+const CenterContentWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  height: calc(100% - 3em);
+`;
+const InputWrapper = styled.div`
+  width: 100%;
+  margin-left: 1vw;
+  margin-right: 1vw;
+  background-color:#4D535B
+  border-radius: 4px;
+  height: 3vw;
+  display: flex;
+  align-items: center;
+`;
+const MessageWrapper = styled.div`
+  width: 100%;
+  height: 75%;
+`;
+
+const SvgWrapper = styled.div`
+  display: flex;
+  justify-content: space-around;
+  width: 10%;
+`;
 const RightContainer = styled.section`
-  width: 15%;
+  width: 20%;
   border: 1px #fff solid;
 `;
 const RightHeader = styled.div``;
@@ -180,27 +214,31 @@ class Chat extends React.Component {
 
   render() {
     return (
-      <Background>
+      <Background id="background">
         <GlobalStyles />
-        <LeftContainer>
-          <LeftHeader>
-            <RoomHeader>Rooms</RoomHeader>
+        <LeftContainer id="left-container">
+          <LeftHeader id="left-header">
+            <RoomHeader id="room-header">Rooms</RoomHeader>
           </LeftHeader>
-          <LeftContentWrapper>
-            <RoomsWrapper>
+          <LeftContentWrapper id="left-content-wrapper">
+            <RoomsWrapper id="rooms-wrapper">
               <RoomsBar
+                id="rooms-bar"
                 handleUpdateActiveChatroom={this.handleUpdateActiveChatroom}
                 chatRooms={this.state.chatRooms}
               />
             </RoomsWrapper>
           </LeftContentWrapper>
         </LeftContainer>
-        <CenterContainer>
-          <CenterHeader>
-            <CurrentRoomInfo currentRoom={this.state.currentRoom} />
+        <CenterContainer id="center-container">
+          <CenterHeader id="center-header">
+            <CurrentRoomInfo
+              id="current-room-info"
+              currentRoom={this.state.currentRoom}
+            />
           </CenterHeader>
-          <CenterContentWrapper>
-            <div>
+          <CenterContentWrapper id="center-content-wrapper">
+            <MessageWrapper id="message-wrapper">
               {this.state.messages.map(message => {
                 return (
                   <div>
@@ -208,34 +246,40 @@ class Chat extends React.Component {
                   </div>
                 );
               })}
-            </div>
-            <InformationBar
+            </MessageWrapper>
+            {/* <InformationBar
+              id="information-bar"
               connectionInformation={this.state.connectionInformation}
-            />
-            <InputWrapper>
+            /> */}
+            <InputWrapper id="input-wrapper">
               <p>{this.state.typingSocket ? `Someone is typing ...` : null}</p>
-              <MessageWrapper>
-                <Message
-                  socket={this.state.socket}
-                  value={this.state.message}
-                  sendMessage={this.sendMessage}
-                  currentRoom={this.state.currentRoom}
-                  onKeyDownNotEnter={this.onKeyDownNotEnter}
-                  handleUpdateInputChanges={this.handleUpdateInputChanges}
-                  clearMessage={this.handleClearMessage}
-                  username={this.state.username}
-                  message={this.state.message}
-                  handleUpdateTyping={this.handleUpdateTyping}
-                  handleUpdateNotTyping={this.handleUpdateNotTyping}
-                  handleUpdateAddMessage={this.handleUpdateAddMessage}
-                  isTyping={this.state.isTyping}
-                  handleUpdateIsTyping={this.handleUpdateIsTyping}
-                  handleUpdateTimeout={this.handleUpdateTimeout}
-                  timeoutValue={this.state.timeout}
-                />
 
-                <button onClick={this.sendMessage}>Send</button>
-              </MessageWrapper>
+              <Message
+                socket={this.state.socket}
+                value={this.state.message}
+                sendMessage={this.sendMessage}
+                currentRoom={this.state.currentRoom}
+                onKeyDownNotEnter={this.onKeyDownNotEnter}
+                handleUpdateInputChanges={this.handleUpdateInputChanges}
+                clearMessage={this.handleClearMessage}
+                username={this.state.username}
+                message={this.state.message}
+                handleUpdateTyping={this.handleUpdateTyping}
+                handleUpdateNotTyping={this.handleUpdateNotTyping}
+                handleUpdateAddMessage={this.handleUpdateAddMessage}
+                isTyping={this.state.isTyping}
+                handleUpdateIsTyping={this.handleUpdateIsTyping}
+                handleUpdateTimeout={this.handleUpdateTimeout}
+                timeoutValue={this.state.timeout}
+              />
+              <SvgWrapper>
+                <Emojis id="emojis-icon" />
+                <SendButton id="send-button" onClick={this.sendMessage} />
+              </SvgWrapper>
+
+              {/* <button id="send-button" onClick={this.sendMessage}>
+                Send
+              </button> */}
             </InputWrapper>
             {/* <UsernameInput
             username={this.state.username}

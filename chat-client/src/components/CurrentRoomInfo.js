@@ -1,9 +1,13 @@
 import React from "react";
+import styled from "styled-components";
 
-const handleChangeChatRoom = () => {};
+const CurrentRoomParagraph = styled.p`
+  margin: 0;
+  padding-left: 1vw;
+`;
 
 const CurrentRoomInfo = props => {
-  return <p onClick={handleChangeChatRoom}>current room {props.currentRoom}</p>;
+  return <CurrentRoomParagraph>{props.currentRoom}</CurrentRoomParagraph>;
 };
 
 export default CurrentRoomInfo;

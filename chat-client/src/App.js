@@ -19,7 +19,7 @@ class App extends Component {
   state = {
     isNickname: false,
     nickname: "",
-    isLoggedIn: true
+    isLoggedIn: false
   };
 
   handleUpdateNickname = props => {

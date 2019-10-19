@@ -1,7 +1,20 @@
 import React from "react";
 import socketIOClient from "socket.io-client";
-
+import styled from "styled-components";
 const socket = socketIOClient("http://localhost:5000");
+
+const InputMessage = styled.input`
+  padding-left: 1vw;
+  width: 88%;
+  border: none;
+  border-radius: 4px;
+  height: 100%;
+  background-color: #4d535b;
+  padding-top: 0;
+  padding-bottom: 0;
+  outline: none;
+  color: #fbfbfb;
+`;
 class MessageInput extends React.Component {
   state = {};
 
@@ -77,7 +90,7 @@ class MessageInput extends React.Component {
 
   render() {
     return (
-      <input
+      <InputMessage
         value={this.props.value}
         type="text"
         placeholder="Type your message here"
