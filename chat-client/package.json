@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "dotenv": "^8.1.0",
+    "babel-plugin-styled-components": "^1.10.6",
+    "dotenv": "^8.2.0",
     "env-cmd": "^10.0.1",
     "local-storage": "^2.0.0",
     "react": "^16.10.2",

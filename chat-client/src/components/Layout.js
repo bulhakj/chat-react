@@ -9,13 +9,64 @@ import RoomsBar from "./RoomsBar";
 import ConnectedUsers from "./ConnectedUsers";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import styled from "styled-components";
+import { createGlobalStyle } from "styled-components";
 
-const Background = styled.div`
-  background-color: red;
-  height: 100%;
-  width: 100%;
+const GlobalStyles = createGlobalStyle`
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
+const Background = styled.div`
+  height: 80.75vh;
+  width: 93.75vw;
+  display: flex;
+`;
+
+const LeftContainer = styled.section`
+  width: 15%;
+  border: 1px #fff solid;
+  background-color: #2c2f33;
+  border: none;
+  border-radius: 15px 0 0 15px;
+`;
+const LeftHeader = styled.div`
+  padding-left: 2.5rem;
+  height: 3vw;
+  display: flex;
+  align-items: center;
+  box-shadow: 0px 4px 11px -6px #000;
+`;
+const RoomHeader = styled.h3`
+  color: #dadada;
+  margin-top: 0;
+  margin-bottom: 0;
+  height: auto;
+`;
+const LeftContentWrapper = styled.div`
+  color: #565656;
+  text-transform: uppercase;
+`;
+
+const RoomsWrapper = styled.div`
+  margin-top: 2vw;
+`;
+const CenterContainer = styled.section`
+  width: 70%;
+  border: 1px #fff solid;
+`;
+const CenterHeader = styled.div``;
+const CenterContentWrapper = styled.div``;
+const InputWrapper = styled.div``;
+const MessageWrapper = styled.div``;
+const RightContainer = styled.section`
+  width: 15%;
+  border: 1px #fff solid;
+`;
+const RightHeader = styled.div``;
+const RightContentWrapper = styled.div``;
 const server = process.env.REACT_APP_SERVER;
 const socket = socketIOClient(server);
 class Chat extends React.Component {
@@ -130,63 +181,91 @@ class Chat extends React.Component {
   render() {
     return (
       <Background>
-        <div>
-          <div>Global Chat</div>
-          <RoomsBar
-            handleUpdateActiveChatroom={this.handleUpdateActiveChatroom}
-            chatRooms={this.state.chatRooms}
-          />
-          <CurrentRoomInfo currentRoom={this.state.currentRoom} />
-          <hr />
-          <MessageWindow />
-          <div>
-            {this.state.messages.map(message => {
-              return (
-                <div>
-                  {message.author}: {message.message}
-                </div>
-              );
-            })}
-          </div>
-          <p>{this.state.typingSocket ? `Someone is typing ...` : null}</p>
-        </div>
-        <div>
-          <UsernameInput
+        <GlobalStyles />
+        <LeftContainer>
+          <LeftHeader>
+            <RoomHeader>Rooms</RoomHeader>
+          </LeftHeader>
+          <LeftContentWrapper>
+            <RoomsWrapper>
+              <RoomsBar
+                handleUpdateActiveChatroom={this.handleUpdateActiveChatroom}
+                chatRooms={this.state.chatRooms}
+              />
+            </RoomsWrapper>
+          </LeftContentWrapper>
+        </LeftContainer>
+        <CenterContainer>
+          <CenterHeader>
+            <CurrentRoomInfo currentRoom={this.state.currentRoom} />
+          </CenterHeader>
+          <CenterContentWrapper>
+            <div>
+              {this.state.messages.map(message => {
+                return (
+                  <div>
+                    {message.author}: {message.message}
+                  </div>
+                );
+              })}
+            </div>
+            <InformationBar
+              connectionInformation={this.state.connectionInformation}
+            />
+            <InputWrapper>
+              <p>{this.state.typingSocket ? `Someone is typing ...` : null}</p>
+              <MessageWrapper>
+                <Message
+                  socket={this.state.socket}
+                  value={this.state.message}
+                  sendMessage={this.sendMessage}
+                  currentRoom={this.state.currentRoom}
+                  onKeyDownNotEnter={this.onKeyDownNotEnter}
+                  handleUpdateInputChanges={this.handleUpdateInputChanges}
+                  clearMessage={this.handleClearMessage}
+                  username={this.state.username}
+                  message={this.state.message}
+                  handleUpdateTyping={this.handleUpdateTyping}
+                  handleUpdateNotTyping={this.handleUpdateNotTyping}
+                  handleUpdateAddMessage={this.handleUpdateAddMessage}
+                  isTyping={this.state.isTyping}
+                  handleUpdateIsTyping={this.handleUpdateIsTyping}
+                  handleUpdateTimeout={this.handleUpdateTimeout}
+                  timeoutValue={this.state.timeout}
+                />
+
+                <button onClick={this.sendMessage}>Send</button>
+              </MessageWrapper>
+            </InputWrapper>
+            {/* <UsernameInput
             username={this.state.username}
             updateUsername={this.handleUpdateUsername}
-          />
-          <br />
-          <Message
-            socket={this.state.socket}
-            value={this.state.message}
-            sendMessage={this.sendMessage}
-            currentRoom={this.state.currentRoom}
-            onKeyDownNotEnter={this.onKeyDownNotEnter}
-            handleUpdateInputChanges={this.handleUpdateInputChanges}
-            clearMessage={this.handleClearMessage}
-            username={this.state.username}
-            message={this.state.message}
-            handleUpdateTyping={this.handleUpdateTyping}
-            handleUpdateNotTyping={this.handleUpdateNotTyping}
-            handleUpdateAddMessage={this.handleUpdateAddMessage}
-            isTyping={this.state.isTyping}
-            handleUpdateIsTyping={this.handleUpdateIsTyping}
-            handleUpdateTimeout={this.handleUpdateTimeout}
-            timeoutValue={this.state.timeout}
-          />
-          <InformationBar
-            connectionInformation={this.state.connectionInformation}
-          />
-          <br />
-          <button onClick={this.sendMessage}>Send</button>
+          /> */}
+          </CenterContentWrapper>
+        </CenterContainer>
+        <RightContainer>
+          <RightHeader></RightHeader>
+          <RightContentWrapper>
+            <div>
+              <ConnectedUsers
+                key={ConnectedUsers}
+                username={this.state.username}
+                currentRoom={this.state.currentRoom}
+              />
+            </div>
+          </RightContentWrapper>
+        </RightContainer>
+        {/* <div>
+          <div>Global Chat</div>
+
+          <hr />
+          <MessageWindow />
         </div>
         <div>
-          <ConnectedUsers
-            key={ConnectedUsers}
-            username={this.state.username}
-            currentRoom={this.state.currentRoom}
-          />
-        </div>
+          <br />
+
+          <br />
+        </div> */}
       </Background>
     );
   }
