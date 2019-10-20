@@ -10,7 +10,9 @@ import SendButton from "./SendButton";
 import RoomsBar from "./RoomsBar";
 import ConnectedUsers from "./ConnectedUsers";
 import styled from "styled-components";
+import LogoImage from "../static/images/logo.svg";
 import { createGlobalStyle } from "styled-components";
+import { animateScroll } from "react-scroll";
 
 const GlobalStyles = createGlobalStyle`
   body {
@@ -85,9 +87,30 @@ const InputWrapper = styled.div`
   display: flex;
   align-items: center;
 `;
+
 const MessageWrapper = styled.div`
   width: 100%;
   height: 75%;
+  overflow: auto;
+`;
+const SingleMessage = styled.div`
+  padding: 1vw 1vw 0 1vw;
+`;
+
+const MessageAuthor = styled.div`
+  font-size: 0.8vw;
+  color: #c4c4c4;
+`;
+
+const MessageContent = styled.div`
+  background-color: #414549;
+  height: 2.5vw;
+  border-radius: 14px;
+  padding-left: 1vw;
+  display: flex;
+  align-items: center;
+  margin-top: 0.2vw;
+  color: #fbfbfb;
 `;
 
 const SvgWrapper = styled.div`
@@ -97,10 +120,38 @@ const SvgWrapper = styled.div`
 `;
 const RightContainer = styled.section`
   width: 20%;
-  border: 1px #fff solid;
+  background-color: #2c2f33;
+  border-radius: 0 15px 15px 0;
 `;
-const RightHeader = styled.div``;
-const RightContentWrapper = styled.div``;
+const RightHeader = styled.div`
+  height: 3.2vw;
+  box-shadow: 0px 4px 11px -6px #000;
+  background-color: #383c41;
+  text-transform: uppercase;
+  color: #dadada;
+  border-radius: 0 15px 0 0;
+`;
+const LogoContainer = styled.div`
+  height: 100%;
+`;
+const RightContentWrapper = styled.div`
+  height: 100%;
+`;
+const LogoWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  height: 100%;
+`;
+const Logo = styled.img`
+  height: 2vw;
+  padding-left: 0.5vw;
+`;
+
+const LogoTextContent = styled.span`
+  text-transform: lowercase;
+  font-size: 1.3vw;
+  padding-left: 1vw;
+`;
 const server = process.env.REACT_APP_SERVER;
 const socket = socketIOClient(server);
 class Chat extends React.Component {
@@ -121,6 +172,7 @@ class Chat extends React.Component {
   }
 
   componentDidMount = () => {
+    this.scrollToBottom();
     this.setState({
       username: this.props.nickname
     });
@@ -141,6 +193,10 @@ class Chat extends React.Component {
       console.log(data);
       this.handleUpdateAddMessage(data);
     });
+  };
+
+  componentDidUpdate = () => {
+    this.scrollToBottom();
   };
 
   handleUpdateAddMessage = props => {
@@ -212,6 +268,14 @@ class Chat extends React.Component {
     console.log(`after emit GET_ROOM_USERS`);
   };
 
+  scrollToBottom = () => {
+    this.messagesEnd.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+      inline: "nearest"
+    });
+  };
+
   render() {
     return (
       <Background id="background">
@@ -241,11 +305,18 @@ class Chat extends React.Component {
             <MessageWrapper id="message-wrapper">
               {this.state.messages.map(message => {
                 return (
-                  <div>
-                    {message.author}: {message.message}
-                  </div>
+                  <SingleMessage>
+                    <MessageAuthor>{message.author}</MessageAuthor>
+                    <MessageContent>{message.message}</MessageContent>
+                  </SingleMessage>
                 );
               })}
+              <div
+                style={{ float: "left", clear: "both" }}
+                ref={el => {
+                  this.messagesEnd = el;
+                }}
+              ></div>
             </MessageWrapper>
             {/* <InformationBar
               id="information-bar"
@@ -274,7 +345,7 @@ class Chat extends React.Component {
               />
               <SvgWrapper>
                 <Emojis id="emojis-icon" />
-                <SendButton id="send-button" onClick={this.sendMessage} />
+                <SendButton sendMessage={this.sendMessage} id="send-button" />
               </SvgWrapper>
 
               {/* <button id="send-button" onClick={this.sendMessage}>
@@ -288,15 +359,21 @@ class Chat extends React.Component {
           </CenterContentWrapper>
         </CenterContainer>
         <RightContainer>
-          <RightHeader></RightHeader>
-          <RightContentWrapper>
-            <div>
-              <ConnectedUsers
-                key={ConnectedUsers}
-                username={this.state.username}
-                currentRoom={this.state.currentRoom}
-              />
-            </div>
+          <RightHeader>
+            <LogoContainer>
+              <LogoWrapper id="logo-wrapper">
+                <Logo src={LogoImage} alt="Cirrus logo" />
+                <LogoTextContent>cirrus</LogoTextContent>
+              </LogoWrapper>
+            </LogoContainer>
+          </RightHeader>
+          <RightContentWrapper id="right-content-wrapper">
+            <ConnectedUsers
+              id="connected-users"
+              key={ConnectedUsers}
+              username={this.state.username}
+              currentRoom={this.state.currentRoom}
+            />
           </RightContentWrapper>
         </RightContainer>
         {/* <div>
