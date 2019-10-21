@@ -4,7 +4,7 @@ import styled from "styled-components";
 import OnlineDot from "../static/images/online-dot.svg";
 
 const server = process.env.REACT_APP_SERVER;
-const socket = socketIOClient(server);
+const socket = socketIOClient(server, { secure: true });
 
 const ConnectedUsersWrapper = styled.div`
   height: 100%;

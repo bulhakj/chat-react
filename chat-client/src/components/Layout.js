@@ -153,7 +153,7 @@ const LogoTextContent = styled.span`
   padding-left: 1vw;
 `;
 const server = process.env.REACT_APP_SERVER;
-const socket = socketIOClient(server);
+const socket = socketIOClient(server, { secure: true });
 class Chat extends React.Component {
   constructor(props) {
     super(props);

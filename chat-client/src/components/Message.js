@@ -1,7 +1,7 @@
 import React from "react";
 import socketIOClient from "socket.io-client";
 import styled from "styled-components";
-const socket = socketIOClient("http://localhost:5000");
+const socket = socketIOClient(process.env.REACT_APP_SERVER, { secure: true });
 
 const InputMessage = styled.input`
   padding-left: 1vw;
