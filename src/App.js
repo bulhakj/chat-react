@@ -22,6 +22,10 @@ class App extends Component {
     isLoggedIn: false
   };
 
+  componentDidMount = () => {
+    console.log(process.env.REACT_APP_SERVER);
+  };
+
   handleUpdateNickname = props => {
     console.log(props);
     this.setState(
