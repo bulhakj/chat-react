@@ -28,7 +28,6 @@ const Dot = styled.img`
 class ConnectedUsers extends Component {
   state = {
     usersConnected: ""
-    // currentRoom: this.props.currentRoom
   };
 
   componentDidMount = () => {
@@ -41,10 +40,10 @@ class ConnectedUsers extends Component {
           usersConnected: users
         });
       });
-    }, 4000);
+    }, 1500);
     this.checkUsers = setInterval(() => {
       socket.emit("GET_ROOM_USERS", this.props.currentRoom);
-    }, 4000);
+    }, 1500);
   };
 
   render() {
