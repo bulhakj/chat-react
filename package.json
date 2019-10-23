@@ -1,14 +1,23 @@
 {
-  "name": "chat-react",
+  "name": "chat-client",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-scripts": "3.0.0"
+    "babel-plugin-styled-components": "^1.10.6",
+    "dotenv": "^8.2.0",
+    "env-cmd": "^10.0.1",
+    "local-storage": "^2.0.0",
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2",
+    "react-helmet": "^5.2.1",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.0.0",
+    "react-scroll": "^1.7.14",
+    "socket.io-client": "^2.3.0",
+    "styled-components": "^4.4.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "env-cmd -f .env.development react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
