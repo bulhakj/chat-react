@@ -135,7 +135,13 @@ const LoginButton = styled.button`
 class NicknameScreen extends React.Component {
   state = {
     nickname: "",
-    submit: false
+    submit: false,
+    isChecked: false,
+    isRemembered: false
+  };
+
+  componentDidMount = () => {
+    console.log(localStorage.getItem("nickname"));
   };
 
   handleSubmitNickname = () => {
@@ -150,13 +156,17 @@ class NicknameScreen extends React.Component {
     });
   };
 
-  // handleUpdateNickname = e => {
-  //   console.log(e.target.value);
-  //   this.setState({
-  //     nickname: e.target.value,
-  //     isLoggedIn: true
-  //   });
-  // };
+  handleUpdateCheckboxStatus = () => {
+    this.setState(
+      {
+        isChecked: !this.state.isChecked,
+        isRemembered: !this.state.isRemembered
+      },
+      () => {
+        localStorage.setItem("remembered", this.state.isRemembered);
+      }
+    );
+  };
 
   render() {
     return (
@@ -185,7 +195,10 @@ class NicknameScreen extends React.Component {
                   />
                   <CheckboxWrapper>
                     <RememberMeCheckboxLabel>
-                      <RememberMeCheckbox type="checkbox" />
+                      <RememberMeCheckbox
+                        onClick={() => this.handleUpdateCheckboxStatus()}
+                        type="checkbox"
+                      />
                       Remember me
                     </RememberMeCheckboxLabel>
                   </CheckboxWrapper>
@@ -201,18 +214,6 @@ class NicknameScreen extends React.Component {
                     </LoginButton>
                   </LoginButtonWrapper>
                 </LoginWrapper>
-                {/* {this.state.isNickname ? (
-                <div>
-                  <Layout
-                    nickname={this.state.nickname}
-                    title="This is the Layout"
-                  />
-                </div>
-              ) : (
-                <NicknameScreen
-                  handleUpdateNickname={this.handleUpdateNickname}
-                />
-              )} */}
               </LeftWrapper>
               <RightWrapper id="right-wrapper">
                 <LoginImage id="lady-image" src={LadyImage} />

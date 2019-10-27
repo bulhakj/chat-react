@@ -16,8 +16,36 @@ const InputMessage = styled.input`
   color: #fbfbfb;
 `;
 class MessageInput extends React.Component {
-  state = {};
+  state = {
+    sendMouseMessage: this.props.sendMouseMessage
+  };
 
+  componentDidUpdate(prevProps, prevState) {
+    console.log(prevState.sendMouseMessage);
+    console.log(prevProps.sendMouseMessage);
+    console.log(this.props.sendMouseMessage);
+    if (
+      prevProps.sendMouseMessage !== true &&
+      this.props.sendMouseMessage == true
+    ) {
+      this.handleSendOnClickMouseMessage();
+      this.props.handleSendMouseBtnMessage(false);
+    }
+  }
+
+  handleSendOnClickMouseMessage = () => {
+    socket.on("updatechat", function(username, data) {});
+    socket.emit(
+      "SEND_MESSAGE",
+      {
+        author: this.props.username,
+        message: this.props.message,
+        currentRoom: this.props.currentRoom
+      },
+      this.state.currentRoom
+    );
+    this.props.clearMessage();
+  };
   componentDidMount = props => {
     console.log(this.props.socket);
     socket.on("typing", serverRoom => {

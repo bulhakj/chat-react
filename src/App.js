@@ -1,12 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
-import Layout from "./components/Layout";
-import NicknameScreen from "./components/NicknameScreen";
-import styled from "styled-components";
 import Chat from "./components/Layout";
 import Login from "./components/NicknameScreen";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import { withRouter } from "react-router";
 import { createGlobalStyle } from "styled-components";
 const GlobalStyles = createGlobalStyle`
   body {
@@ -24,6 +19,13 @@ class App extends Component {
 
   componentDidMount = () => {
     console.log(process.env.REACT_APP_SERVER);
+    if (
+      !localStorage.getItem("remembered") &&
+      !localStorage.getItem("isLoggedIn")
+    ) {
+      localStorage.setItem("remembered", false);
+      localStorage.setItem("isLoggedIn", false);
+    }
   };
 
   handleUpdateNickname = props => {
@@ -36,14 +38,28 @@ class App extends Component {
       },
       () => {
         const { isNickname, nickname, isLoggedIn } = this.state;
-        localStorage.setItem("isNickname", isNickname);
-        localStorage.setItem("nickname", nickname);
         localStorage.setItem("isLoggedIn", isLoggedIn);
+        if (localStorage.getItem("remembered") == "true") {
+          localStorage.setItem("isNickname", isNickname);
+          localStorage.setItem("nickname", nickname);
+        }
       }
     );
   };
 
   render() {
+    // let component;
+    // if (localStorage.getItem("remembered") == "true") {
+    //   component = <Chat nickname={localStorage.getItem("nickname")} />;
+    // } else if (localStorage.getItem("remembered") == "false" && localStorage.getItem("isLoggedIn") == ) {
+    //   component = <Login handleUpdateNickname={this.handleUpdateNickname} />;
+    // } else if (
+    //   localStorage.getItem("remembered") == "null" &&
+    //   localStorage.getItem("isLoggedIn") == "true"
+    // ) {
+    //   console.log("inside");
+    //   component = <Chat nickname={this.state.nickname} />;
+    // }
     return (
       <div>
         <GlobalStyles />

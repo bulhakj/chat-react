@@ -190,7 +190,8 @@ class Chat extends React.Component {
       timeout: undefined,
       connectionInformation: "",
       chatRooms: ["general", "room1", "room2"],
-      currentRoom: "general"
+      currentRoom: "general",
+      sendMouseMessage: false
     };
   }
 
@@ -300,6 +301,11 @@ class Chat extends React.Component {
     });
   };
 
+  handleSendMouseBtnMessage = props => {
+    this.setState({
+      sendMouseMessage: props
+    });
+  };
   render() {
     return (
       <Background id="background">
@@ -346,10 +352,6 @@ class Chat extends React.Component {
                 }}
               ></div>
             </MessageWrapper>
-            {/* <InformationBar
-              id="information-bar"
-              connectionInformation={this.state.connectionInformation}
-            /> */}
             <WritingInformationWrapper id="writing-information-wrapper">
               <WritingInformation id="writing-information">
                 {this.state.typingSocket ? `Someone is typing ...` : null}
@@ -374,21 +376,18 @@ class Chat extends React.Component {
                   handleUpdateIsTyping={this.handleUpdateIsTyping}
                   handleUpdateTimeout={this.handleUpdateTimeout}
                   timeoutValue={this.state.timeout}
+                  sendMouseMessage={this.state.sendMouseMessage}
+                  handleSendMouseBtnMessage={this.handleSendMouseBtnMessage}
                 />
                 <SvgWrapper>
                   <Emojis id="emojis-icon" />
-                  <SendButton sendMessage={this.sendMessage} id="send-button" />
+                  <SendButton
+                    handleSendMouseBtnMessage={this.handleSendMouseBtnMessage}
+                    id="send-button"
+                  />
                 </SvgWrapper>
-
-                {/* <button id="send-button" onClick={this.sendMessage}>
-                Send
-              </button> */}
               </InputWrapper>
             </InputContainer>
-            {/* <UsernameInput
-            username={this.state.username}
-            updateUsername={this.handleUpdateUsername}
-          /> */}
           </CenterContentWrapper>
         </CenterContainer>
         <RightContainer>
@@ -409,17 +408,6 @@ class Chat extends React.Component {
             />
           </RightContentWrapper>
         </RightContainer>
-        {/* <div>
-          <div>Global Chat</div>
-
-          <hr />
-          <MessageWindow />
-        </div>
-        <div>
-          <br />
-
-          <br />
-        </div> */}
       </Background>
     );
   }
