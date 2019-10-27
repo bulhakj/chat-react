@@ -77,10 +77,16 @@ const CenterContentWrapper = styled.div`
   flex-wrap: wrap;
   height: calc(100% - 3em);
 `;
+const InputContainer = styled.div`
+  height: 21%;
+  width: 100%;
+  margin-right: 1vw;
+  margin-left: 1vw;
+  display: flex;
+  align-items: center;
+`;
 const InputWrapper = styled.div`
   width: 100%;
-  margin-left: 1vw;
-  margin-right: 1vw;
   background-color:#4D535B
   border-radius: 4px;
   height: 3vw;
@@ -88,9 +94,26 @@ const InputWrapper = styled.div`
   align-items: center;
 `;
 
+const WritingInformationWrapper = styled.div`
+  height: 9%;
+  width: 100%;
+  margin-right: 1vw;
+  margin-left: 1vw;
+  display: flex;
+  align-items: flex-end;
+`;
+
+const WritingInformation = styled.p`
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 0.9rem;
+  color: #9c9898;
+  font-family: Roboto;
+`;
+
 const MessageWrapper = styled.div`
   width: 100%;
-  height: 75%;
+  height: 70%;
   overflow: auto;
 `;
 const SingleMessage = styled.div`
@@ -256,7 +279,8 @@ class Chat extends React.Component {
     console.log(`active chat: ${props}`);
     this.setState(
       {
-        currentRoom: props
+        currentRoom: props,
+        messages: []
       },
       () => {
         socket.emit("GET_ROOM_USERS", this.state.currentRoom);
@@ -305,9 +329,13 @@ class Chat extends React.Component {
             <MessageWrapper id="message-wrapper">
               {this.state.messages.map(message => {
                 return (
-                  <SingleMessage>
-                    <MessageAuthor>{message.author}</MessageAuthor>
-                    <MessageContent>{message.message}</MessageContent>
+                  <SingleMessage id="single-message">
+                    <MessageAuthor id="message-author">
+                      {message.author}
+                    </MessageAuthor>
+                    <MessageContent id="message-content">
+                      {message.message}
+                    </MessageContent>
                   </SingleMessage>
                 );
               })}
@@ -322,36 +350,41 @@ class Chat extends React.Component {
               id="information-bar"
               connectionInformation={this.state.connectionInformation}
             /> */}
-            <InputWrapper id="input-wrapper">
-              <p>{this.state.typingSocket ? `Someone is typing ...` : null}</p>
+            <WritingInformationWrapper id="writing-information-wrapper">
+              <WritingInformation id="writing-information">
+                {this.state.typingSocket ? `Someone is typing ...` : null}
+              </WritingInformation>
+            </WritingInformationWrapper>
+            <InputContainer id="input-container">
+              <InputWrapper id="input-wrapper">
+                <Message
+                  socket={this.state.socket}
+                  value={this.state.message}
+                  sendMessage={this.sendMessage}
+                  currentRoom={this.state.currentRoom}
+                  onKeyDownNotEnter={this.onKeyDownNotEnter}
+                  handleUpdateInputChanges={this.handleUpdateInputChanges}
+                  clearMessage={this.handleClearMessage}
+                  username={this.state.username}
+                  message={this.state.message}
+                  handleUpdateTyping={this.handleUpdateTyping}
+                  handleUpdateNotTyping={this.handleUpdateNotTyping}
+                  handleUpdateAddMessage={this.handleUpdateAddMessage}
+                  isTyping={this.state.isTyping}
+                  handleUpdateIsTyping={this.handleUpdateIsTyping}
+                  handleUpdateTimeout={this.handleUpdateTimeout}
+                  timeoutValue={this.state.timeout}
+                />
+                <SvgWrapper>
+                  <Emojis id="emojis-icon" />
+                  <SendButton sendMessage={this.sendMessage} id="send-button" />
+                </SvgWrapper>
 
-              <Message
-                socket={this.state.socket}
-                value={this.state.message}
-                sendMessage={this.sendMessage}
-                currentRoom={this.state.currentRoom}
-                onKeyDownNotEnter={this.onKeyDownNotEnter}
-                handleUpdateInputChanges={this.handleUpdateInputChanges}
-                clearMessage={this.handleClearMessage}
-                username={this.state.username}
-                message={this.state.message}
-                handleUpdateTyping={this.handleUpdateTyping}
-                handleUpdateNotTyping={this.handleUpdateNotTyping}
-                handleUpdateAddMessage={this.handleUpdateAddMessage}
-                isTyping={this.state.isTyping}
-                handleUpdateIsTyping={this.handleUpdateIsTyping}
-                handleUpdateTimeout={this.handleUpdateTimeout}
-                timeoutValue={this.state.timeout}
-              />
-              <SvgWrapper>
-                <Emojis id="emojis-icon" />
-                <SendButton sendMessage={this.sendMessage} id="send-button" />
-              </SvgWrapper>
-
-              {/* <button id="send-button" onClick={this.sendMessage}>
+                {/* <button id="send-button" onClick={this.sendMessage}>
                 Send
               </button> */}
-            </InputWrapper>
+              </InputWrapper>
+            </InputContainer>
             {/* <UsernameInput
             username={this.state.username}
             updateUsername={this.handleUpdateUsername}
