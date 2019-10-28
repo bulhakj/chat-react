@@ -1,6 +1,19 @@
 import React from "react";
 import socketIOClient from "socket.io-client";
 import styled from "styled-components";
+import EmojiPicker from "emoji-picker-react";
+import JSEMOJI from "emoji-js";
+import "emoji-mart/css/emoji-mart.css";
+import { Picker } from "emoji-mart";
+
+//emoji set up
+let jsemoji = new JSEMOJI();
+// set the style to emojione (default - apple)
+jsemoji.img_set = "emojione";
+// set the storage location for all emojis
+jsemoji.img_sets.emojione.path =
+  "https://cdn.jsdelivr.net/emojione/assets/3.0/png/32/";
+
 const socket = socketIOClient(process.env.REACT_APP_SERVER, { secure: true });
 
 const InputMessage = styled.input`
@@ -17,7 +30,8 @@ const InputMessage = styled.input`
 `;
 class MessageInput extends React.Component {
   state = {
-    sendMouseMessage: this.props.sendMouseMessage
+    sendMouseMessage: this.props.sendMouseMessage,
+    message: ""
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -32,6 +46,12 @@ class MessageInput extends React.Component {
       this.props.handleSendMouseBtnMessage(false);
     }
   }
+
+  componentDidMount = () => {
+    this.setState({
+      message: this.props.value
+    });
+  };
 
   handleSendOnClickMouseMessage = () => {
     socket.on("updatechat", function(username, data) {});
@@ -98,6 +118,9 @@ class MessageInput extends React.Component {
   handleEnterSend = e => {
     if (e.key === "Enter") {
       this.sendMessage(e);
+      this.setState({
+        message: ""
+      });
     }
   };
 
@@ -116,19 +139,44 @@ class MessageInput extends React.Component {
     this.props.clearMessage();
   };
 
+  // handleEmojiClick = e => {
+  // let emojiPic = jsemoji.replace_colons(`:${emoji.name}:`);
+  // let emojiPic = e.native;
+  // console.log(emojiPic);
+  // console.log(e);
+  // this.setState({
+  //   message: this.state.message + emojiPic
+  // });
+  // };
+  addEmoji = e => {
+    console.log(e.native);
+    this.setState({
+      message: this.state.message + e.native
+    });
+  };
+
   render() {
     return (
-      <InputMessage
-        value={this.props.value}
-        type="text"
-        placeholder="Type your message here"
-        onChange={event => {
-          console.log(event.target.value);
-          this.props.handleUpdateInputChanges(event.target.value);
-          this.onKeyDownNotEnter();
-        }}
-        onKeyUp={this.handleEnterSend}
-      />
+      <div>
+        <InputMessage
+          value={this.state.message}
+          type="text"
+          placeholder="Type your message here"
+          onChange={event => {
+            console.log(event.target.value);
+            this.props.handleUpdateInputChanges(this.state.message);
+            this.onKeyDownNotEnter();
+            this.setState({
+              message: event.target.value
+            });
+          }}
+          onKeyUp={this.handleEnterSend}
+        />
+        {/* <EmojiPicker onEmojiClick={this.handleEmojiClick} />*/}
+        <span>
+          <Picker onSelect={this.addEmoji} />
+        </span>
+      </div>
     );
   }
 }
