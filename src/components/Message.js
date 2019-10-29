@@ -31,13 +31,11 @@ const InputMessage = styled.input`
 class MessageInput extends React.Component {
   state = {
     sendMouseMessage: this.props.sendMouseMessage,
-    message: ""
+    message: "",
+    displayEmojiPicker: false
   };
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(prevState.sendMouseMessage);
-    console.log(prevProps.sendMouseMessage);
-    console.log(this.props.sendMouseMessage);
     if (
       prevProps.sendMouseMessage !== true &&
       this.props.sendMouseMessage == true
@@ -150,9 +148,14 @@ class MessageInput extends React.Component {
   // };
   addEmoji = e => {
     console.log(e.native);
-    this.setState({
-      message: this.state.message + e.native
-    });
+    this.setState(
+      {
+        message: this.state.message + e.native
+      },
+      () => {
+        this.props.handleUpdateInputChanges(this.state.message);
+      }
+    );
   };
 
   render() {
@@ -166,16 +169,23 @@ class MessageInput extends React.Component {
             console.log(event.target.value);
             this.props.handleUpdateInputChanges(this.state.message);
             this.onKeyDownNotEnter();
-            this.setState({
-              message: event.target.value
-            });
+            this.setState(
+              {
+                message: event.target.value
+              },
+              () => {
+                this.props.handleUpdateInputChanges(this.state.message);
+              }
+            );
           }}
           onKeyUp={this.handleEnterSend}
         />
         {/* <EmojiPicker onEmojiClick={this.handleEmojiClick} />*/}
-        <span>
-          <Picker onSelect={this.addEmoji} />
-        </span>
+        {this.props.isEmojiOpen === true && (
+          <span>
+            <Picker onSelect={this.addEmoji} />
+          </span>
+        )}
       </div>
     );
   }

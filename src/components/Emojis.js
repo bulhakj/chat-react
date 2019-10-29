@@ -17,9 +17,23 @@ const EmojisSvg = styled.svg`
 `;
 
 class Emojis extends Component {
+  state = {
+    isOpen: false
+  };
+
+  openEmojis = () => {
+    this.setState(
+      {
+        isOpen: !this.state.isOpen
+      },
+      () => {
+        this.props.handleOpenEmojiPicker(this.state.isOpen);
+      }
+    );
+  };
   render() {
     return (
-      <div>
+      <div onClick={this.openEmojis}>
         <EmojisSvg
           width="24"
           height="24"

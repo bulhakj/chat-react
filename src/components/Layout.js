@@ -191,7 +191,8 @@ class Chat extends React.Component {
       connectionInformation: "",
       chatRooms: ["general", "room1", "room2"],
       currentRoom: "general",
-      sendMouseMessage: false
+      sendMouseMessage: false,
+      isEmojiOpen: false
     };
   }
 
@@ -306,6 +307,12 @@ class Chat extends React.Component {
       sendMouseMessage: props
     });
   };
+
+  handleOpenEmojiPicker = props => {
+    this.setState({
+      isEmojiOpen: props
+    });
+  };
   render() {
     return (
       <Background id="background">
@@ -378,9 +385,13 @@ class Chat extends React.Component {
                   timeoutValue={this.state.timeout}
                   sendMouseMessage={this.state.sendMouseMessage}
                   handleSendMouseBtnMessage={this.handleSendMouseBtnMessage}
+                  isEmojiOpen={this.state.isEmojiOpen}
                 />
                 <SvgWrapper>
-                  <Emojis id="emojis-icon" />
+                  <Emojis
+                    handleOpenEmojiPicker={this.handleOpenEmojiPicker}
+                    id="emojis-icon"
+                  />
                   <SendButton
                     handleSendMouseBtnMessage={this.handleSendMouseBtnMessage}
                     id="send-button"
