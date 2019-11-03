@@ -16,6 +16,10 @@ jsemoji.img_sets.emojione.path =
 
 const socket = socketIOClient(process.env.REACT_APP_SERVER, { secure: true });
 
+const InputMessageWrapper = styled.div`
+  width: 89%;
+`;
+
 const InputMessage = styled.input`
   padding-left: 1vw;
   width: 88%;
@@ -63,6 +67,9 @@ class MessageInput extends React.Component {
       this.state.currentRoom
     );
     this.props.clearMessage();
+    this.setState({
+      message: ""
+    });
   };
   componentDidMount = props => {
     console.log(this.props.socket);
@@ -96,8 +103,7 @@ class MessageInput extends React.Component {
   onKeyDownNotEnter = () => {
     if (this.props.isTyping === false) {
       this.props.handleUpdateIsTyping(true);
-      var timeout = setTimeout(this.timeoutFunction, 1200);
-      console.log(timeout);
+      let timeout = setTimeout(this.timeoutFunction, 1200);
       this.props.handleUpdateTimeout(timeout);
     } else {
       socket.emit(
@@ -137,15 +143,6 @@ class MessageInput extends React.Component {
     this.props.clearMessage();
   };
 
-  // handleEmojiClick = e => {
-  // let emojiPic = jsemoji.replace_colons(`:${emoji.name}:`);
-  // let emojiPic = e.native;
-  // console.log(emojiPic);
-  // console.log(e);
-  // this.setState({
-  //   message: this.state.message + emojiPic
-  // });
-  // };
   addEmoji = e => {
     console.log(e.native);
     this.setState(
@@ -160,7 +157,7 @@ class MessageInput extends React.Component {
 
   render() {
     return (
-      <div>
+      <InputMessageWrapper>
         <InputMessage
           value={this.state.message}
           type="text"
@@ -180,13 +177,13 @@ class MessageInput extends React.Component {
           }}
           onKeyUp={this.handleEnterSend}
         />
-        {/* <EmojiPicker onEmojiClick={this.handleEmojiClick} />*/}
         {this.props.isEmojiOpen === true && (
-          <span>
-            <Picker onSelect={this.addEmoji} />
-          </span>
+          <Picker
+            style={{ position: "absolute", bottom: "20px", right: "20px" }}
+            onSelect={this.addEmoji}
+          />
         )}
-      </div>
+      </InputMessageWrapper>
     );
   }
 }
