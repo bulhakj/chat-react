@@ -42,7 +42,8 @@ class MessageInput extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     if (
       prevProps.sendMouseMessage !== true &&
-      this.props.sendMouseMessage == true
+      this.props.sendMouseMessage == true &&
+      this.state.message !== ""
     ) {
       this.handleSendOnClickMouseMessage();
       this.props.handleSendMouseBtnMessage(false);
@@ -131,16 +132,18 @@ class MessageInput extends React.Component {
   sendMessage = e => {
     socket.on("updatechat", function(username, data) {});
     e.preventDefault();
-    socket.emit(
-      "SEND_MESSAGE",
-      {
-        author: this.props.username,
-        message: this.props.message,
-        currentRoom: this.props.currentRoom
-      },
-      this.state.currentRoom
-    );
-    this.props.clearMessage();
+    if (this.state.message != -"") {
+      socket.emit(
+        "SEND_MESSAGE",
+        {
+          author: this.props.username,
+          message: this.props.message,
+          currentRoom: this.props.currentRoom
+        },
+        this.state.currentRoom
+      );
+      this.props.clearMessage();
+    }
   };
 
   addEmoji = e => {
@@ -166,6 +169,7 @@ class MessageInput extends React.Component {
             console.log(event.target.value);
             this.props.handleUpdateInputChanges(this.state.message);
             this.onKeyDownNotEnter();
+            this.props.handleSendMouseBtnMessage(false);
             this.setState(
               {
                 message: event.target.value
