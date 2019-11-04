@@ -19,6 +19,7 @@ const RoomsBar = props => {
         return (
           <RoomsWrapper
             name={item}
+            key={item}
             onClick={() => props.handleUpdateActiveChatroom(item)}
           >
             {item}

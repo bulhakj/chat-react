@@ -1,7 +1,6 @@
 import React from "react";
 import socketIOClient from "socket.io-client";
 import styled from "styled-components";
-import EmojiPicker from "emoji-picker-react";
 import JSEMOJI from "emoji-js";
 import "emoji-mart/css/emoji-mart.css";
 import { Picker } from "emoji-mart";
@@ -15,6 +14,10 @@ jsemoji.img_sets.emojione.path =
   "https://cdn.jsdelivr.net/emojione/assets/3.0/png/32/";
 
 const socket = socketIOClient(process.env.REACT_APP_SERVER, { secure: true });
+
+const InputMessageWrapper = styled.div`
+  width: 89%;
+`;
 
 const InputMessage = styled.input`
   padding-left: 1vw;
@@ -31,16 +34,15 @@ const InputMessage = styled.input`
 class MessageInput extends React.Component {
   state = {
     sendMouseMessage: this.props.sendMouseMessage,
-    message: ""
+    message: "",
+    displayEmojiPicker: false
   };
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(prevState.sendMouseMessage);
-    console.log(prevProps.sendMouseMessage);
-    console.log(this.props.sendMouseMessage);
     if (
       prevProps.sendMouseMessage !== true &&
-      this.props.sendMouseMessage == true
+      this.props.sendMouseMessage == true &&
+      this.state.message !== ""
     ) {
       this.handleSendOnClickMouseMessage();
       this.props.handleSendMouseBtnMessage(false);
@@ -65,32 +67,29 @@ class MessageInput extends React.Component {
       this.state.currentRoom
     );
     this.props.clearMessage();
+    this.setState({
+      message: ""
+    });
   };
   componentDidMount = props => {
-    console.log(this.props.socket);
     socket.on("typing", serverRoom => {
       if (this.props.currentRoom === serverRoom) {
         this.props.handleUpdateTyping(true);
-        console.log(`odebrano typing`);
       }
     });
 
     socket.on("nottyping", serverRoom => {
       if (this.props.currentRoom === serverRoom) {
         this.props.handleUpdateNotTyping(false);
-        console.log(`odebrano not typing`);
       }
     });
 
     socket.on("RECEIVE_MESSAGE", username => {
-      console.log(`receive message`);
-      console.log(username);
       this.props.handleUpdateAddMessage(username);
     });
   };
 
   timeoutFunction = props => {
-    console.log("in timeout");
     this.props.handleUpdateIsTyping(false);
     socket.emit("nottyping", this.props.currentRoom);
   };
@@ -98,8 +97,7 @@ class MessageInput extends React.Component {
   onKeyDownNotEnter = () => {
     if (this.props.isTyping === false) {
       this.props.handleUpdateIsTyping(true);
-      var timeout = setTimeout(this.timeoutFunction, 1200);
-      console.log(timeout);
+      let timeout = setTimeout(this.timeoutFunction, 1200);
       this.props.handleUpdateTimeout(timeout);
     } else {
       socket.emit(
@@ -109,7 +107,6 @@ class MessageInput extends React.Component {
         },
         this.state.currentRoom
       );
-      console.log("timeout to clear", this.props.timeoutValue);
       clearTimeout(this.props.timeoutValue);
       this.props.handleUpdateTimeout(setTimeout(this.timeoutFunction, 1200));
     }
@@ -127,56 +124,60 @@ class MessageInput extends React.Component {
   sendMessage = e => {
     socket.on("updatechat", function(username, data) {});
     e.preventDefault();
-    socket.emit(
-      "SEND_MESSAGE",
-      {
-        author: this.props.username,
-        message: this.props.message,
-        currentRoom: this.props.currentRoom
-      },
-      this.state.currentRoom
-    );
-    this.props.clearMessage();
+    if (this.state.message !== "") {
+      socket.emit(
+        "SEND_MESSAGE",
+        {
+          author: this.props.username,
+          message: this.props.message,
+          currentRoom: this.props.currentRoom
+        },
+        this.state.currentRoom
+      );
+      this.props.clearMessage();
+    }
   };
 
-  // handleEmojiClick = e => {
-  // let emojiPic = jsemoji.replace_colons(`:${emoji.name}:`);
-  // let emojiPic = e.native;
-  // console.log(emojiPic);
-  // console.log(e);
-  // this.setState({
-  //   message: this.state.message + emojiPic
-  // });
-  // };
   addEmoji = e => {
-    console.log(e.native);
-    this.setState({
-      message: this.state.message + e.native
-    });
+    this.setState(
+      {
+        message: this.state.message + e.native
+      },
+      () => {
+        this.props.handleUpdateInputChanges(this.state.message);
+      }
+    );
   };
 
   render() {
     return (
-      <div>
+      <InputMessageWrapper>
         <InputMessage
           value={this.state.message}
           type="text"
           placeholder="Type your message here"
           onChange={event => {
-            console.log(event.target.value);
             this.props.handleUpdateInputChanges(this.state.message);
             this.onKeyDownNotEnter();
-            this.setState({
-              message: event.target.value
-            });
+            this.props.handleSendMouseBtnMessage(false);
+            this.setState(
+              {
+                message: event.target.value
+              },
+              () => {
+                this.props.handleUpdateInputChanges(this.state.message);
+              }
+            );
           }}
           onKeyUp={this.handleEnterSend}
         />
-        {/* <EmojiPicker onEmojiClick={this.handleEmojiClick} />*/}
-        <span>
-          <Picker onSelect={this.addEmoji} />
-        </span>
-      </div>
+        {this.props.isEmojiOpen === true && (
+          <Picker
+            style={{ position: "absolute", bottom: "20px", right: "20px" }}
+            onSelect={this.addEmoji}
+          />
+        )}
+      </InputMessageWrapper>
     );
   }
 }

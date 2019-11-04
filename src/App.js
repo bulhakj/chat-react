@@ -18,7 +18,6 @@ class App extends Component {
   };
 
   componentDidMount = () => {
-    console.log(process.env.REACT_APP_SERVER);
     if (
       !localStorage.getItem("remembered") &&
       !localStorage.getItem("isLoggedIn")
@@ -29,7 +28,6 @@ class App extends Component {
   };
 
   handleUpdateNickname = props => {
-    console.log(props);
     this.setState(
       {
         isNickname: true,
@@ -48,18 +46,6 @@ class App extends Component {
   };
 
   render() {
-    // let component;
-    // if (localStorage.getItem("remembered") == "true") {
-    //   component = <Chat nickname={localStorage.getItem("nickname")} />;
-    // } else if (localStorage.getItem("remembered") == "false" && localStorage.getItem("isLoggedIn") == ) {
-    //   component = <Login handleUpdateNickname={this.handleUpdateNickname} />;
-    // } else if (
-    //   localStorage.getItem("remembered") == "null" &&
-    //   localStorage.getItem("isLoggedIn") == "true"
-    // ) {
-    //   console.log("inside");
-    //   component = <Chat nickname={this.state.nickname} />;
-    // }
     return (
       <div>
         <GlobalStyles />

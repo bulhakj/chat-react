@@ -1,9 +1,6 @@
 import React from "react";
 import socketIOClient from "socket.io-client";
 import Message from "./Message";
-import UsernameInput from "./UsernameInput";
-import MessageWindow from "./MessageWindow";
-import InformationBar from "./InformationBar";
 import CurrentRoomInfo from "./CurrentRoomInfo";
 import Emojis from "./Emojis";
 import SendButton from "./SendButton";
@@ -12,7 +9,6 @@ import ConnectedUsers from "./ConnectedUsers";
 import styled from "styled-components";
 import LogoImage from "../static/images/logo.svg";
 import { createGlobalStyle } from "styled-components";
-import { animateScroll } from "react-scroll";
 
 const GlobalStyles = createGlobalStyle`
   body {
@@ -191,7 +187,8 @@ class Chat extends React.Component {
       connectionInformation: "",
       chatRooms: ["general", "room1", "room2"],
       currentRoom: "general",
-      sendMouseMessage: false
+      sendMouseMessage: false,
+      isEmojiOpen: false
     };
   }
 
@@ -200,12 +197,8 @@ class Chat extends React.Component {
     this.setState({
       username: this.props.nickname
     });
-    const username = this.props.nickname;
-    console.log("komponent załadowany");
-    console.log(username);
     socket.emit("adduser", this.props.nickname, this.state.currentRoom);
     socket.on("updatechat", (username, data) => {
-      console.log(`${data}`);
       this.setState({
         connectionInformation: data
       });
@@ -213,8 +206,6 @@ class Chat extends React.Component {
     });
 
     socket.on("RECEIVE_MESSAGE", data => {
-      console.log(`receive message`);
-      console.log(data);
       this.handleUpdateAddMessage(data);
     });
   };
@@ -224,7 +215,6 @@ class Chat extends React.Component {
   };
 
   handleUpdateAddMessage = props => {
-    console.log(`dodano message do tablicy`);
     this.setState({
       messages: [...this.state.messages, props],
       backInfo: ""
@@ -238,15 +228,12 @@ class Chat extends React.Component {
   };
 
   handleUpdateTyping = props => {
-    console.log(`update typing props: ${props}`);
-    console.log("update pisania");
     this.setState({
       typingSocket: props
     });
   };
 
   handleUpdateNotTyping = props => {
-    console.log(`ustawiam pisanie na false`);
     this.setState({
       typingSocket: props
     });
@@ -277,7 +264,6 @@ class Chat extends React.Component {
   };
 
   handleUpdateActiveChatroom = props => {
-    console.log(`active chat: ${props}`);
     this.setState(
       {
         currentRoom: props,
@@ -288,9 +274,7 @@ class Chat extends React.Component {
       }
     );
     socket.emit("switchRoom", props, this.state.username);
-    console.log(`VIEW_CONNECTED_USERS in switchRoom`);
     socket.emit("GET_ROOM_USERS", this.state.currentRoom);
-    console.log(`after emit GET_ROOM_USERS`);
   };
 
   scrollToBottom = () => {
@@ -304,6 +288,12 @@ class Chat extends React.Component {
   handleSendMouseBtnMessage = props => {
     this.setState({
       sendMouseMessage: props
+    });
+  };
+
+  handleOpenEmojiPicker = props => {
+    this.setState({
+      isEmojiOpen: props
     });
   };
   render() {
@@ -335,7 +325,7 @@ class Chat extends React.Component {
             <MessageWrapper id="message-wrapper">
               {this.state.messages.map(message => {
                 return (
-                  <SingleMessage id="single-message">
+                  <SingleMessage key={message.name} id="single-message">
                     <MessageAuthor id="message-author">
                       {message.author}
                     </MessageAuthor>
@@ -378,9 +368,13 @@ class Chat extends React.Component {
                   timeoutValue={this.state.timeout}
                   sendMouseMessage={this.state.sendMouseMessage}
                   handleSendMouseBtnMessage={this.handleSendMouseBtnMessage}
+                  isEmojiOpen={this.state.isEmojiOpen}
                 />
                 <SvgWrapper>
-                  <Emojis id="emojis-icon" />
+                  <Emojis
+                    handleOpenEmojiPicker={this.handleOpenEmojiPicker}
+                    id="emojis-icon"
+                  />
                   <SendButton
                     handleSendMouseBtnMessage={this.handleSendMouseBtnMessage}
                     id="send-button"
