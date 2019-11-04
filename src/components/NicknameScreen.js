@@ -2,9 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import LogoImage from "../static/images/logo.svg";
 import LadyImage from "../static/images/ladysvg.svg";
-import Chat from "./Layout";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import { withRouter } from "react-router";
 
 const Application = styled.div`
   background-color: #23272a;
@@ -36,12 +33,20 @@ const CirrusWrapper = styled.span`
   justify-content: flex-end;
   margin-right: 7vw;
   font-size: 1.5rem;
+  @media screen and (max-width: 576px) {
+    font-size: 1rem;
+    margin-top: 3vw;
+  }
 `;
 
 const Logo = styled.img`
   width: 42px;
   height: 42px;
   margin-right: 0.694vw;
+  @media screen and (max-width: 576px) {
+    height: 21px;
+    width: 21px;
+  }
 `;
 
 const LoginScreen = styled.div`
@@ -51,25 +56,54 @@ const LoginScreen = styled.div`
   border-radius: 14px;
   display: flex;
   justify-content: space-between;
+
+  @media screen and (max-width: 576px) {
+    width: 89vw;
+    flex-wrap: wrap;
+    height: 80vh;
+    overflow: hidden;
+    border-radius: 8px;
+  }
 `;
 
 const LeftWrapper = styled.div`
   height: 100%;
   padding-left: 11vw;
+
+  @media screen and (max-width: 576px) {
+    width: 100%;
+    padding: 0;
+    height: auto;
+  }
 `;
 
 const RightWrapper = styled.div`
   height: 100%;
   display: flex;
   align-items: center;
+  @media screen and (max-width: 576px) {
+    height: auto;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
 `;
 
 const LoginImage = styled.img`
   width: 24.306vw;
   padding-right: 0.1rem;
+
+  @media screen and (max-width: 576px) {
+    width: 68.306vw;
+    margin-top: 6vw;
+  }
 `;
 
-const LoginWrapper = styled.div``;
+const LoginWrapper = styled.div`
+  @media screen and (max-width: 576px) {
+    padding: 0 7vw;
+  }
+`;
 
 const WelcomeText = styled.h3`
   font-style: normal;
@@ -80,12 +114,21 @@ const WelcomeText = styled.h3`
   color: #23272a;
   margin-top: 2.5vw;
   margin-bottom: 1.5vw;
+  @media screen and (max-width: 576px) {
+    text-align: center;
+    font-size: 2.2rem;
+    padding-top: 8vw;
+  }
 `;
 
 const NicknameParagraph = styled.p`
   color: #565656;
   font-size: 1.3vw;
   margin-bottom: 0.7vw;
+  @media screen and (max-width: 576px) {
+    font-size: 0.5rem;
+    margin-top: 12vw;
+  }
 `;
 
 const NicknameInput = styled.input`
@@ -96,30 +139,18 @@ const NicknameInput = styled.input`
   border: none;
   padding-left: 0.5vw;
   font-size: 1vw;
-`;
-
-const CheckboxWrapper = styled.div`
-  width: 100%;
-  margin-top: 0.7vw;
-  margin-bottom: 1.5vw;
-`;
-
-const RememberMeCheckboxLabel = styled.label`
-  width: 100%;
-  color: #565656;
-  display: flex;
-  align-items: center;
-  font-size: 1vw;
-`;
-
-const RememberMeCheckbox = styled.input`
-  margin-left: 0px;
+  @media screen and (max-width: 576px) {
+    height: 5.125vw;
+  }
 `;
 
 const LoginButtonWrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: flex-end;
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const LoginButton = styled.button`
@@ -132,16 +163,30 @@ const LoginButton = styled.button`
   font-size: 17px;
 `;
 
+const LoginButtonMobile = styled.button`
+  display: none;
+  width: 100%;
+  background-color: #03a9f4;
+  border-radius: 4px;
+  border: none;
+  color: #fff;
+  height: 36px;
+  width: 98px;
+  font-size: 17px;
+
+  @media screen and (max-width: 768px) {
+    display: block;
+    width: 89vw;
+    margin-top: 5vw;
+  }
+`;
+
 class NicknameScreen extends React.Component {
   state = {
     nickname: "",
     submit: false,
     isChecked: false,
     isRemembered: false
-  };
-
-  componentDidMount = () => {
-    console.log(localStorage.getItem("nickname"));
   };
 
   handleSubmitNickname = () => {
@@ -181,11 +226,13 @@ class NicknameScreen extends React.Component {
                 </CirrusWrapper>
               </LogoWrapper>
             </LogoContainer>
-            <LoginScreen>
-              <LeftWrapper>
-                <LoginWrapper>
-                  <WelcomeText>Hi there !</WelcomeText>
-                  <NicknameParagraph>Nickname</NicknameParagraph>
+            <LoginScreen id="login-screen">
+              <LeftWrapper id="left-wrapper">
+                <LoginWrapper id="login-wrapper">
+                  <WelcomeText id="welcome-text">Hi there !</WelcomeText>
+                  <NicknameParagraph id="nickname-paragraph">
+                    Nickname
+                  </NicknameParagraph>
                   <NicknameInput
                     id="nickname-input"
                     onChange={e => {
@@ -193,16 +240,7 @@ class NicknameScreen extends React.Component {
                     }}
                     type="text"
                   />
-                  <CheckboxWrapper>
-                    <RememberMeCheckboxLabel>
-                      <RememberMeCheckbox
-                        onClick={() => this.handleUpdateCheckboxStatus()}
-                        type="checkbox"
-                      />
-                      Remember me
-                    </RememberMeCheckboxLabel>
-                  </CheckboxWrapper>
-                  <LoginButtonWrapper>
+                  <LoginButtonWrapper id="login-button-wrapper">
                     <LoginButton
                       id="login-btn"
                       onClick={() =>
@@ -219,6 +257,15 @@ class NicknameScreen extends React.Component {
                 <LoginImage id="lady-image" src={LadyImage} />
               </RightWrapper>
             </LoginScreen>
+            <LoginButtonMobile
+              id="login-btn-mobile"
+              onClick={() =>
+                this.props.handleUpdateNickname(this.state.nickname)
+              }
+              type="submit"
+            >
+              JOIN
+            </LoginButtonMobile>
           </Application>
         </form>
       </div>

@@ -1,7 +1,6 @@
 import React from "react";
 import socketIOClient from "socket.io-client";
 import styled from "styled-components";
-import EmojiPicker from "emoji-picker-react";
 import JSEMOJI from "emoji-js";
 import "emoji-mart/css/emoji-mart.css";
 import { Picker } from "emoji-mart";
@@ -73,30 +72,24 @@ class MessageInput extends React.Component {
     });
   };
   componentDidMount = props => {
-    console.log(this.props.socket);
     socket.on("typing", serverRoom => {
       if (this.props.currentRoom === serverRoom) {
         this.props.handleUpdateTyping(true);
-        console.log(`odebrano typing`);
       }
     });
 
     socket.on("nottyping", serverRoom => {
       if (this.props.currentRoom === serverRoom) {
         this.props.handleUpdateNotTyping(false);
-        console.log(`odebrano not typing`);
       }
     });
 
     socket.on("RECEIVE_MESSAGE", username => {
-      console.log(`receive message`);
-      console.log(username);
       this.props.handleUpdateAddMessage(username);
     });
   };
 
   timeoutFunction = props => {
-    console.log("in timeout");
     this.props.handleUpdateIsTyping(false);
     socket.emit("nottyping", this.props.currentRoom);
   };
@@ -114,7 +107,6 @@ class MessageInput extends React.Component {
         },
         this.state.currentRoom
       );
-      console.log("timeout to clear", this.props.timeoutValue);
       clearTimeout(this.props.timeoutValue);
       this.props.handleUpdateTimeout(setTimeout(this.timeoutFunction, 1200));
     }
@@ -132,7 +124,7 @@ class MessageInput extends React.Component {
   sendMessage = e => {
     socket.on("updatechat", function(username, data) {});
     e.preventDefault();
-    if (this.state.message != -"") {
+    if (this.state.message !== "") {
       socket.emit(
         "SEND_MESSAGE",
         {
@@ -147,7 +139,6 @@ class MessageInput extends React.Component {
   };
 
   addEmoji = e => {
-    console.log(e.native);
     this.setState(
       {
         message: this.state.message + e.native
@@ -166,7 +157,6 @@ class MessageInput extends React.Component {
           type="text"
           placeholder="Type your message here"
           onChange={event => {
-            console.log(event.target.value);
             this.props.handleUpdateInputChanges(this.state.message);
             this.onKeyDownNotEnter();
             this.props.handleSendMouseBtnMessage(false);

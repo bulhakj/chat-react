@@ -31,11 +31,9 @@ class ConnectedUsers extends Component {
   };
 
   componentDidMount = () => {
-    console.log(`mounted connected users`);
     this.timer = setTimeout(() => {
       socket.emit("GET_ROOM_USERS", this.props.currentRoom);
       socket.on("SEND_ROOM_SOCKET_USERS", users => {
-        console.log("USERS IN CONNECTED USERS, ", users);
         this.setState({
           usersConnected: users
         });
