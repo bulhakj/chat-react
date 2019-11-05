@@ -60,7 +60,7 @@ const LoginScreen = styled.div`
   @media screen and (max-width: 576px) {
     width: 89vw;
     flex-wrap: wrap;
-    height: 80vh;
+    height: 60vh;
     overflow: hidden;
     border-radius: 8px;
   }
@@ -126,7 +126,7 @@ const NicknameParagraph = styled.p`
   font-size: 1.3vw;
   margin-bottom: 0.7vw;
   @media screen and (max-width: 576px) {
-    font-size: 0.5rem;
+    font-size: 0.7rem;
     margin-top: 12vw;
   }
 `;
@@ -140,7 +140,8 @@ const NicknameInput = styled.input`
   padding-left: 0.5vw;
   font-size: 1vw;
   @media screen and (max-width: 576px) {
-    height: 5.125vw;
+    height: 7.125vw;
+    font-size: 0.7rem;
   }
 `;
 
@@ -178,6 +179,7 @@ const LoginButtonMobile = styled.button`
     display: block;
     width: 89vw;
     margin-top: 5vw;
+    margin-bottom: 5vw;
   }
 `;
 

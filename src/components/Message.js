@@ -17,6 +17,9 @@ const socket = socketIOClient(process.env.REACT_APP_SERVER, { secure: true });
 
 const InputMessageWrapper = styled.div`
   width: 89%;
+  @media screen and (max-width: 576px) {
+    width: 83%;
+  }
 `;
 
 const InputMessage = styled.input`
@@ -30,6 +33,9 @@ const InputMessage = styled.input`
   padding-bottom: 0;
   outline: none;
   color: #fbfbfb;
+  @media screen and (max-width: 576px) {
+    margin-left: 3vw;
+  }
 `;
 class MessageInput extends React.Component {
   state = {
@@ -151,8 +157,9 @@ class MessageInput extends React.Component {
 
   render() {
     return (
-      <InputMessageWrapper>
+      <InputMessageWrapper id="input-message-wrapper">
         <InputMessage
+          id="input-message"
           value={this.state.message}
           type="text"
           placeholder="Type your message here"

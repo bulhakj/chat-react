@@ -7,8 +7,9 @@ import SendButton from "./SendButton";
 import RoomsBar from "./RoomsBar";
 import ConnectedUsers from "./ConnectedUsers";
 import styled from "styled-components";
-import LogoImage from "../static/images/logo.svg";
 import { createGlobalStyle } from "styled-components";
+import LogoImage from "../static/images/logo.svg";
+import HamburgerMenuImage from "../static/images/hamburger-menu.svg";
 
 const GlobalStyles = createGlobalStyle`
   body {
@@ -22,6 +23,10 @@ const Background = styled.div`
   height: 80.75vh;
   width: 93.75vw;
   display: flex;
+  @media screen and (max-width: 576px) {
+    height: 100vh;
+    width: 100vw;
+  }
 `;
 
 const LeftContainer = styled.section`
@@ -30,6 +35,9 @@ const LeftContainer = styled.section`
   background-color: #2c2f33;
   border: none;
   border-radius: 15px 0 0 15px;
+  @media screen and (max-width: 576px) {
+    display: none;
+  }
 `;
 const LeftHeader = styled.div`
   padding-left: 2.5rem;
@@ -57,6 +65,9 @@ const RoomsWrapper = styled.div`
 const CenterContainer = styled.section`
   width: 60%;
   background-color: #383c41;
+  @media screen and (max-width: 576px) {
+    width: 100%;
+  }
 `;
 const CenterHeader = styled.div`
   height: 3.2vw;
@@ -67,7 +78,27 @@ const CenterHeader = styled.div`
   font-weight: 400;
   display: flex;
   align-items: center;
+  @media screen and (max-width: 576px) {
+    height: 15vw;
+    align-items: center;
+  }
 `;
+
+const HamburgerMenuWrapper = styled.div`
+  display: none;
+  margin: 0 5vw;
+  @media screen and (max-width: 576px) {
+    display: inherit;
+  }
+`;
+
+const HamburgerMenu = styled.img`
+  display: none;
+  @media screen and (max-width: 576px) {
+    display: inherit;
+  }
+`;
+
 const CenterContentWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -80,6 +111,10 @@ const InputContainer = styled.div`
   margin-left: 1vw;
   display: flex;
   align-items: center;
+  @media screen and (max-width: 576px) {
+    margin-right: 3vw;
+    margin-left: 3vw;
+  }
 `;
 const InputWrapper = styled.div`
   width: 100%;
@@ -88,6 +123,9 @@ const InputWrapper = styled.div`
   height: 3vw;
   display: flex;
   align-items: center;
+  @media screen and (max-width: 576px) {
+    height: 2.8em;
+  }
 `;
 
 const WritingInformationWrapper = styled.div`
@@ -114,11 +152,18 @@ const MessageWrapper = styled.div`
 `;
 const SingleMessage = styled.div`
   padding: 1vw 1vw 0 1vw;
+  @media screen and (max-width: 576px) {
+    padding: 4vw 9vw 0 4vw;
+  }
 `;
 
 const MessageAuthor = styled.div`
-  font-size: 0.8vw;
+  font-size: 0.8rem;
   color: #c4c4c4;
+  @media screen and (max-width: 576px) {
+    margin-left: 2vw;
+    margin-bottom: 0.8vw;
+  }
 `;
 
 const MessageContent = styled.div`
@@ -130,6 +175,10 @@ const MessageContent = styled.div`
   align-items: center;
   margin-top: 0.2vw;
   color: #fbfbfb;
+  @media screen and (max-width: 576px) {
+    height: 2.3em;
+    padding-left: 3vw;
+  }
 `;
 
 const SvgWrapper = styled.div`
@@ -141,6 +190,9 @@ const RightContainer = styled.section`
   width: 20%;
   background-color: #2c2f33;
   border-radius: 0 15px 15px 0;
+  @media screen and (max-width: 576px) {
+    display: none;
+  }
 `;
 const RightHeader = styled.div`
   height: 3.2vw;
@@ -316,6 +368,9 @@ class Chat extends React.Component {
         </LeftContainer>
         <CenterContainer id="center-container">
           <CenterHeader id="center-header">
+            <HamburgerMenuWrapper id="hamburger-menu-wrapper">
+              <HamburgerMenu id="hamburger-menu" src={HamburgerMenuImage} />
+            </HamburgerMenuWrapper>
             <CurrentRoomInfo
               id="current-room-info"
               currentRoom={this.state.currentRoom}
@@ -350,6 +405,7 @@ class Chat extends React.Component {
             <InputContainer id="input-container">
               <InputWrapper id="input-wrapper">
                 <Message
+                  id="message"
                   socket={this.state.socket}
                   value={this.state.message}
                   sendMessage={this.sendMessage}
