@@ -24,8 +24,8 @@ const Background = styled.div`
   width: 93.75vw;
   display: flex;
   @media screen and (max-width: 576px) {
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
+    width: 100%;
   }
 `;
 

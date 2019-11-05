@@ -179,10 +179,7 @@ class MessageInput extends React.Component {
           onKeyUp={this.handleEnterSend}
         />
         {this.props.isEmojiOpen === true && (
-          <Picker
-            style={{ position: "absolute", bottom: "20px", right: "20px" }}
-            onSelect={this.addEmoji}
-          />
+          <Picker style={{ position: "absolute" }} onSelect={this.addEmoji} />
         )}
       </InputMessageWrapper>
     );
