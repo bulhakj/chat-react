@@ -138,7 +138,9 @@ const NicknameInput = styled.input`
   outline: none;
   border: none;
   padding-left: 0.5vw;
+  padding-right: 0.5vw;
   font-size: 1vw;
+  box-sizing: border-box;
   @media screen and (max-width: 576px) {
     height: 7.125vw;
     font-size: 0.7rem;
@@ -149,6 +151,7 @@ const LoginButtonWrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: flex-end;
+  margin-top: 2vw;
   @media screen and (max-width: 768px) {
     display: none;
   }

@@ -10,6 +10,7 @@ import styled from "styled-components";
 import { createGlobalStyle } from "styled-components";
 import LogoImage from "../static/images/logo.svg";
 import HamburgerMenuImage from "../static/images/hamburger-menu.svg";
+import UserIconImage from "../static/images/user-icon.svg";
 
 const GlobalStyles = createGlobalStyle`
   body {
@@ -98,6 +99,18 @@ const HamburgerMenu = styled.img`
     display: inherit;
   }
 `;
+
+const UserIconWrapper = styled.div`
+  display: none;
+  @media screen and (max-width: 576px) {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 5vw;
+  }
+`;
+
+const UserIcon = styled.img``;
 
 const CenterContentWrapper = styled.div`
   display: flex;
@@ -375,6 +388,9 @@ class Chat extends React.Component {
               id="current-room-info"
               currentRoom={this.state.currentRoom}
             />
+            <UserIconWrapper id="user-icon-wrapper">
+              <UserIcon id="user-icon" src={UserIconImage}></UserIcon>
+            </UserIconWrapper>
           </CenterHeader>
           <CenterContentWrapper id="center-content-wrapper">
             <MessageWrapper id="message-wrapper">
