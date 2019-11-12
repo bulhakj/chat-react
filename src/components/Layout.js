@@ -11,6 +11,7 @@ import { createGlobalStyle } from "styled-components";
 import LogoImage from "../static/images/logo.svg";
 import HamburgerMenuImage from "../static/images/hamburger-menu.svg";
 import UserIconImage from "../static/images/user-icon.svg";
+import ExitBtn from "../static/images/exitbtn.svg";
 
 const GlobalStyles = createGlobalStyle`
   body {
@@ -36,8 +37,28 @@ const LeftContainer = styled.section`
   background-color: #2c2f33;
   border: none;
   border-radius: 15px 0 0 15px;
+  transition: all 0.4s ease-in-out;
   @media screen and (max-width: 576px) {
-    display: none;
+    border-radius: 0px;
+    ${props => {
+      if (props.showRoomsTab) {
+        return `
+        position: absolute;
+        width: 50%;
+        height: 100%;
+        visibility: visible;
+        opacity: 1;
+        `;
+      } else {
+        return `
+          opacity: 0;
+          width:0%;
+          height: 100%;
+          position: absolute;
+          visibility: hidden;
+        `;
+      }
+    }}
   }
 `;
 const LeftHeader = styled.div`
@@ -46,6 +67,9 @@ const LeftHeader = styled.div`
   display: flex;
   align-items: center;
   box-shadow: 0px 4px 11px -6px #000;
+  @media screen and (max-width: 576px) {
+    height: 15.2vw;
+  }
 `;
 const RoomHeader = styled.h3`
   color: #dadada;
@@ -202,9 +226,33 @@ const SvgWrapper = styled.div`
 const RightContainer = styled.section`
   width: 20%;
   background-color: #2c2f33;
+  border: 1px #fff solid;
+  background-color: #2c2f33;
+  border: none;
   border-radius: 0 15px 15px 0;
+  transition: all 0.4s ease-in-out;
   @media screen and (max-width: 576px) {
-    display: none;
+    ${props => {
+      if (props.showUsersTab) {
+        return `
+        position: absolute;
+        width: 50%;
+        height: 100%;
+        visibility: visible;
+        opacity: 1;
+        right: 0;
+        `;
+      } else {
+        return `
+          right: 0;
+          opacity: 0;
+          width:0%;
+          height: 100%;
+          position: absolute;
+          visibility: hidden;
+        `;
+      }
+    }}
   }
 `;
 const RightHeader = styled.div`
@@ -214,9 +262,15 @@ const RightHeader = styled.div`
   text-transform: uppercase;
   color: #dadada;
   border-radius: 0 15px 0 0;
+  @media screen and (max-width: 576px) {
+    height: 15vw;
+  }
 `;
 const LogoContainer = styled.div`
   height: 100%;
+  @media screen and (max-width: 576px) {
+    display: flex;
+  }
 `;
 const RightContentWrapper = styled.div`
   height: 100%;
@@ -226,15 +280,34 @@ const LogoWrapper = styled.div`
   align-items: center;
   height: 100%;
 `;
+
+const MobileExitBtnWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  padding-left: 4vw;
+`;
+
+const MobileExitBtn = styled.img`
+  height: 0.8rem;
+`;
+
 const Logo = styled.img`
   height: 2vw;
   padding-left: 0.5vw;
+  @media screen and (max-width: 576px) {
+    height: 9vw;
+    padding-left: 2vw;
+  }
 `;
 
 const LogoTextContent = styled.span`
   text-transform: lowercase;
   font-size: 1.3vw;
   padding-left: 1vw;
+  @media screen and (max-width: 576px) {
+    font-size: 1rem;
+    padding-left: 4vw;
+  }
 `;
 const server = process.env.REACT_APP_SERVER;
 const socket = socketIOClient(server, { secure: true });
@@ -253,7 +326,9 @@ class Chat extends React.Component {
       chatRooms: ["general", "room1", "room2"],
       currentRoom: "general",
       sendMouseMessage: false,
-      isEmojiOpen: false
+      isEmojiOpen: false,
+      isRoomsOpen: false,
+      isUsersOpen: false
     };
   }
 
@@ -361,13 +436,67 @@ class Chat extends React.Component {
       isEmojiOpen: props
     });
   };
+
+  handleUpdateRoomsStatus = props => {
+    this.setState({
+      isRoomsOpen: !this.state.isRoomsOpen
+    });
+  };
+
+  handleUpdateUsersStatus = props => {
+    this.setState({
+      isUsersOpen: !this.state.isUsersOpen
+    });
+  };
+
+  handleUpdateIsRoomsOpen = props => {
+    this.setState({
+      isRoomsOpen: props
+    });
+  };
+
+  handleUpdateIsUsersOpen = props => {
+    this.setState({
+      isUsersOpen: props
+    });
+  };
+
+  handleCloseShowUsers = props => {
+    this.setState({
+      isUsersOpen: false
+    });
+  };
+
+  handleCloseSidebars = props => {
+    if (this.state.isUsersOpen !== false || this.state.isRoomsOpen !== false) {
+      this.setState({
+        isUsersOpen: false,
+        isRoomsOpen: false
+      });
+    }
+  };
+
   render() {
     return (
       <Background id="background">
         <GlobalStyles />
-        <LeftContainer id="left-container">
+        <LeftContainer
+          showRoomsTab={this.state.isRoomsOpen}
+          id="left-container"
+        >
           <LeftHeader id="left-header">
             <RoomHeader id="room-header">Rooms</RoomHeader>
+            {this.state.isRoomsOpen ? (
+              <MobileExitBtnWrapper
+                id="mobile-exit-btn-wrapper"
+                onClick={() => this.handleUpdateIsRoomsOpen(false)}
+              >
+                <MobileExitBtn
+                  id="mobile-exit-btn"
+                  src={ExitBtn}
+                ></MobileExitBtn>
+              </MobileExitBtnWrapper>
+            ) : null}
           </LeftHeader>
           <LeftContentWrapper id="left-content-wrapper">
             <RoomsWrapper id="rooms-wrapper">
@@ -375,20 +504,32 @@ class Chat extends React.Component {
                 id="rooms-bar"
                 handleUpdateActiveChatroom={this.handleUpdateActiveChatroom}
                 chatRooms={this.state.chatRooms}
+                handleUpdateIsRoomsOpen={this.handleUpdateIsRoomsOpen}
               />
             </RoomsWrapper>
           </LeftContentWrapper>
         </LeftContainer>
-        <CenterContainer id="center-container">
+        <CenterContainer
+          onClick={this.handleCloseSidebars}
+          id="center-container"
+        >
           <CenterHeader id="center-header">
-            <HamburgerMenuWrapper id="hamburger-menu-wrapper">
+            <HamburgerMenuWrapper
+              onClick={this.handleUpdateRoomsStatus}
+              id="hamburger-menu-wrapper"
+            >
               <HamburgerMenu id="hamburger-menu" src={HamburgerMenuImage} />
             </HamburgerMenuWrapper>
             <CurrentRoomInfo
               id="current-room-info"
               currentRoom={this.state.currentRoom}
             />
-            <UserIconWrapper id="user-icon-wrapper">
+            <UserIconWrapper
+              onClick={() => {
+                this.handleUpdateUsersStatus();
+              }}
+              id="user-icon-wrapper"
+            >
               <UserIcon id="user-icon" src={UserIconImage}></UserIcon>
             </UserIconWrapper>
           </CenterHeader>
@@ -456,13 +597,27 @@ class Chat extends React.Component {
             </InputContainer>
           </CenterContentWrapper>
         </CenterContainer>
-        <RightContainer>
-          <RightHeader>
-            <LogoContainer>
+        <RightContainer
+          id="right-container"
+          showUsersTab={this.state.isUsersOpen}
+        >
+          <RightHeader id="right-header">
+            <LogoContainer id="logo-container">
               <LogoWrapper id="logo-wrapper">
                 <Logo src={LogoImage} alt="Cirrus logo" />
                 <LogoTextContent>cirrus</LogoTextContent>
               </LogoWrapper>
+              {this.state.isUsersOpen ? (
+                <MobileExitBtnWrapper
+                  id="mobile-exit-btn-wrapper"
+                  onClick={this.handleCloseShowUsers}
+                >
+                  <MobileExitBtn
+                    id="mobile-exit-btn"
+                    src={ExitBtn}
+                  ></MobileExitBtn>
+                </MobileExitBtnWrapper>
+              ) : null}
             </LogoContainer>
           </RightHeader>
           <RightContentWrapper id="right-content-wrapper">

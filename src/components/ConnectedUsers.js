@@ -11,6 +11,10 @@ const ConnectedUsersWrapper = styled.div`
 `;
 const ConnectedUsersSection = styled.section`
   padding-left: 1.6vw;
+  @media screen and (max-width: 576px) {
+    padding-left: 4.6vw;
+    padding-top: 2vw;
+  }
 `;
 
 const ConnectedUser = styled.div`
@@ -19,11 +23,18 @@ const ConnectedUser = styled.div`
   font-size: 0.9vw;
   display: flex;
   align-items: center;
+  @media screen and (max-width: 576px) {
+    font-size: 5.9vw;
+  }
 `;
 
 const Dot = styled.img`
   padding-right: 0.7vw;
   height: 1vw;
+  @media screen and (max-width: 576px) {
+    height: 3vw;
+    padding-right: 2vw;
+  }
 `;
 class ConnectedUsers extends Component {
   state = {
@@ -46,15 +57,15 @@ class ConnectedUsers extends Component {
 
   render() {
     return (
-      <ConnectedUsersWrapper>
-        <ConnectedUsersSection>
+      <ConnectedUsersWrapper id="connected-users-wrapper">
+        <ConnectedUsersSection id="connected-users-section">
           {Object.keys(this.state.usersConnected).map((item, i) => {
             if (
               this.state.usersConnected[item].room == this.props.currentRoom
             ) {
               return (
-                <ConnectedUser key={i}>
-                  <Dot src={OnlineDot}></Dot>
+                <ConnectedUser id="connected-user" key={i}>
+                  <Dot id="dot" src={OnlineDot}></Dot>
                   {this.state.usersConnected[item].nickname}
                 </ConnectedUser>
               );

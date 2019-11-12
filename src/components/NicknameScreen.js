@@ -144,6 +144,8 @@ const NicknameInput = styled.input`
   @media screen and (max-width: 576px) {
     height: 7.125vw;
     font-size: 0.7rem;
+    padding-left: 3vw;
+    padding-right: 3vw;
   }
 `;
 
