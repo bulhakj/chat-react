@@ -2,6 +2,12 @@ import React from "react";
 import styled from "styled-components";
 import { Component } from "react";
 
+const EmojiWrapper = styled.div`
+  @media screen and (max-width: 576px) {
+    display: none;
+  }
+`;
+
 const SvgPath = styled.path`
   transition: all 0.2s ease-in-out;
 `;
@@ -32,7 +38,7 @@ class Emojis extends Component {
   };
   render() {
     return (
-      <div onClick={this.openEmojis}>
+      <EmojiWrapper onClick={this.openEmojis}>
         <EmojisSvg
           width="24"
           height="24"
@@ -48,7 +54,7 @@ class Emojis extends Component {
             />
           </g>
         </EmojisSvg>
-      </div>
+      </EmojiWrapper>
     );
   }
 }

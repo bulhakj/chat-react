@@ -1,6 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 
+const SendButtonWrapper = styled.div`
+  height: 24px;
+  width: 24px;
+`;
+
 const SendButtonSvg = styled.svg`
   fill: #03a9f4;
   transition: all 0.2s ease-in-out;
@@ -14,7 +19,7 @@ const SendButtonSvg = styled.svg`
 
 const sendButton = props => {
   return (
-    <div onClick={() => props.handleSendMouseBtnMessage(true)}>
+    <SendButtonWrapper onClick={() => props.handleSendMouseBtnMessage(true)}>
       <SendButtonSvg
         width="24"
         height="24"
@@ -29,7 +34,7 @@ const sendButton = props => {
           />
         </g>
       </SendButtonSvg>
-    </div>
+    </SendButtonWrapper>
   );
 };
 

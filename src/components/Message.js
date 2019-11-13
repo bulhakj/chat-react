@@ -18,7 +18,7 @@ const socket = socketIOClient(process.env.REACT_APP_SERVER, { secure: true });
 const InputMessageWrapper = styled.div`
   width: 89%;
   @media screen and (max-width: 576px) {
-    width: 83%;
+    width: 86%;
   }
 `;
 
@@ -179,7 +179,10 @@ class MessageInput extends React.Component {
           onKeyUp={this.handleEnterSend}
         />
         {this.props.isEmojiOpen === true && (
-          <Picker style={{ position: "absolute" }} onSelect={this.addEmoji} />
+          <Picker
+            style={{ position: "absolute", width: "22%", top: "0", right: "0" }}
+            onSelect={this.addEmoji}
+          />
         )}
       </InputMessageWrapper>
     );
