@@ -123,17 +123,17 @@ const WelcomeText = styled.h3`
 
 const NicknameParagraph = styled.p`
   color: #565656;
-  font-size: 1.3vw;
+  font-size: 1rem;
   margin-bottom: 0.7vw;
   @media screen and (max-width: 576px) {
-    font-size: 0.7rem;
+    font-size: 1em;
     margin-top: 12vw;
   }
 `;
 
 const NicknameInput = styled.input`
   width: 100%;
-  height: 2.125vw;
+  height: 2.5em;
   border-radius: 4px;
   outline: none;
   border: none;
@@ -143,7 +143,7 @@ const NicknameInput = styled.input`
   box-sizing: border-box;
   @media screen and (max-width: 576px) {
     height: 7.125vw;
-    font-size: 0.7rem;
+    font-size: 1em;
     padding-left: 3vw;
     padding-right: 3vw;
   }

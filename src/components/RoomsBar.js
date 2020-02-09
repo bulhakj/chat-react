@@ -10,7 +10,7 @@ const RoomsContainer = styled.div`
 const RoomsWrapper = styled.div`
   padding-left: 2.5rem;
   margin-bottom: 1.6vw;
-  font-size: 0.9vw;
+  font-size: 0.8rem;
   transition: all .2s ease-in-out
   &:hover {
     color: #03a9f4;
@@ -18,7 +18,7 @@ const RoomsWrapper = styled.div`
   }
   @media screen and (max-width: 576px) {
     margin-bottom: 4.6vw;
-    font-size: 0.8rem;
+    font-size: 1rem;
   }
 `;
 

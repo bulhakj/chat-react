@@ -20,11 +20,11 @@ const ConnectedUsersSection = styled.section`
 const ConnectedUser = styled.div`
   padding-top: 1.6vw;
   color: #565656;
-  font-size: 0.9vw;
+  font-size: 1.2rem;
   display: flex;
   align-items: center;
   @media screen and (max-width: 576px) {
-    font-size: 5.9vw;
+    font-size: 1.3rem;
   }
 `;
 

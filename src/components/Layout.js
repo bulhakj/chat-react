@@ -55,7 +55,7 @@ const LeftContainer = styled.section`
           width:0%;
           height: 100%;
           position: absolute;
-          visibility: hidden;
+          display: none;
         `;
       }
     }}
@@ -63,7 +63,7 @@ const LeftContainer = styled.section`
 `;
 const LeftHeader = styled.div`
   padding-left: 2.5rem;
-  height: 3.2vw;
+  height: 3rem;
   display: flex;
   align-items: center;
   box-shadow: 0px 4px 11px -6px #000;
@@ -95,7 +95,7 @@ const CenterContainer = styled.section`
   }
 `;
 const CenterHeader = styled.div`
-  height: 3.2vw;
+  height: 3rem;
   box-shadow: 0px 4px 11px -6px #000;
   background-color: #383c41;
   text-transform: uppercase;
@@ -157,7 +157,7 @@ const InputWrapper = styled.div`
   width: 100%;
   background-color:#4D535B
   border-radius: 4px;
-  height: 3vw;
+  height: 2.5rem;
   display: flex;
   align-items: center;
   @media screen and (max-width: 576px) {
@@ -195,7 +195,7 @@ const SingleMessage = styled.div`
 `;
 
 const MessageAuthor = styled.div`
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: #c4c4c4;
   @media screen and (max-width: 576px) {
     margin-left: 2vw;
@@ -205,7 +205,7 @@ const MessageAuthor = styled.div`
 
 const MessageContent = styled.div`
   background-color: #414549;
-  height: 2.5vw;
+  height: 1.7em;
   border-radius: 14px;
   padding-left: 1vw;
   display: flex;
@@ -249,14 +249,14 @@ const RightContainer = styled.section`
           width:0%;
           height: 100%;
           position: absolute;
-          visibility: hidden;
+          display: none;
         `;
       }
     }}
   }
 `;
 const RightHeader = styled.div`
-  height: 3.2vw;
+  height: 3rem;
   box-shadow: 0px 4px 11px -6px #000;
   background-color: #383c41;
   text-transform: uppercase;
@@ -302,7 +302,6 @@ const Logo = styled.img`
 
 const LogoTextContent = styled.span`
   text-transform: lowercase;
-  font-size: 1.3vw;
   padding-left: 1vw;
   @media screen and (max-width: 576px) {
     font-size: 1rem;
